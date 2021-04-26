@@ -1,0 +1,6 @@
+# .gitignore
+# ignore these files/directories when using git
+
+build
+.vs
+.vscode

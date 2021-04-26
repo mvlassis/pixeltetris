@@ -2,15 +2,20 @@ cmake_minimum_required(VERSION 3.14...3.19)
 
 project(PixelTetris VERSION 0.5 LANGUAGES CXX)
 
-INCLUDE(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED sdl2)
-pkg_search_module(SDL2TTF REQUIRED SDL2_ttf)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 
 file(GLOB_RECURSE TARGET_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
 
-add_executable(PixelTetris.out ${TARGET_SOURCES})
+if (WIN32)
+	string(REPLACE "/include/SDL2" "/include/" SDL2_PARENT_DIR ${SDL2_INCLUDE_DIR})
+	add_executable(PixelTetris WIN32 ${TARGET_SOURCES})
+else()
+	add_executable(PixelTetris ${TARGET_SOURCES})
+endif()
 
-target_include_directories(PixelTetris.out PRIVATE
-    include ${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
 
-target_link_libraries(PixelTetris.out  ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES})
+target_include_directories(PixelTetris PRIVATE ${SDL2_PARENT_DIR} ${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIRS})
+target_link_libraries(PixelTetris ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARIES})

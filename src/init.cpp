@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #include "config.hpp"
 #include "init.hpp"
@@ -53,10 +53,11 @@ bool initialize()
 bool loadMedia()
 {
     bool success = true;
-    gFont = TTF_OpenFont("../assets/FiraSans-Regular.ttf", 28);
+    gFont = TTF_OpenFont("../../assets/FiraSans-Regular.ttf", 28);
     if (gFont == nullptr)
     {
-        std::cerr << "Could not load font!\n";
+        std::cerr << "Could not load font! SDL_ttf error: " << TTF_GetError() << '\n';
+        success = false;
     }
     return success;
 }
