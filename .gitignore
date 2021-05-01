@@ -2,5 +2,8 @@
 # ignore these files/directories when using git
 
 build
+build2
 .vs
 .vscode
+.VSCodeCounter
+CMakeSettings.json
