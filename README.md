@@ -37,6 +37,12 @@ I do not have a MacOS machine so I cannot test any builds for that OS.
 - Create sprites for all objects
 - Add a simple menu
 - Add basic sound effects
+- 
+## Third party tools
+- [SDL2 framework](https://www.libsdl.org/) to handle all the low-level stuff
+- [SDL_ttf 2.0](https://www.libsdl.org/projects/SDL_ttf/) for rendering fonts
+- The font I use is [Fira Sans](https://fonts.google.com/specimen/Fira+Sans)
+- [CMake scripts](https://github.com/tcbrindle/sdl2-cmake-scripts) to find SDL2 and SDL_ttf 
 
 ## Acknowledgements
 [Lazy Foo's SDL tutorials](https://lazyfoo.net/tutorials/SDL/index.php) have been extremely helpful, look into them if you are interested in low-level game programming or just want a framework to handle basic graphics for your C/C++ programs.
