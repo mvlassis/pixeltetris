@@ -8,12 +8,13 @@ If you just want to play the game, go the the releases page and get the latest e
 This is the first project where I use CMake to support multiple OSes and compilers, so you will need CMake to compile the game yourself.
 ### Windows
 - First of all you will need Visual Studio. I have only compiled with [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/), but I assume that other versions work as well.
-- Clone the repository to your PC.
-- You will also need the [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_ttf 2.0](https://www.libsdl.org/projects/SDL_ttf/) development libraries. Make sure to download the versions denoted with "Visual C++". Extract both zip files to the root directory.
-- Open the folder repository you cloned with Visual Studio.
+- Clone the repository to your PC using Visual Studio.
+- You will also need the [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_ttf 2.0](https://www.libsdl.org/projects/SDL_ttf/) development libraries. Make sure to download the versions denoted with "Visual C++". Extract both zip files to the root directory of the repository you cloned.
+- Open the project folder with Visual Studio.
 - Select CMakeLists.txt in the root of the project to compile.
+- You may need to change the *Build root* option in CMakeSettings.json from *${projectDir}\out\build\${name}* to *${projectDir}\build\${name}*, so that the font loads correctly.
 ### Linux
-- You will need a C++ compiler but almost certainly you will have one installed. Use a command like sudo apt install gcc if you aren't sure.
+- You will need a C++ compiler but almost certainly you will have one installed. Use a command like *sudo apt install gcc* if you aren't sure.
 - Clone the repository to your PC.
 - Open a terminal window in the root directory of the cloned repository and run:
 ```
@@ -24,7 +25,8 @@ cmake --build build/linux
 ```
 You will then find the PixelTetris executable in build/linux.
 
-I do not have a MacOS machine so I cannot test any builds for that OS. 
+### MacOS
+I do not have a MacOS machine so I cannot test any builds for that OS. However, the process of compilation should not be very different from that in Linux, since the CMake find files work in all OSes.
 ## Controls
 - Left/Right/Down arrow keys: Move the tetromino
 - Up arrow key: Rotate the tetromino
@@ -37,7 +39,6 @@ I do not have a MacOS machine so I cannot test any builds for that OS.
 - Create sprites for all objects
 - Add a simple menu
 - Add basic sound effects
-- 
 ## Third party tools
 - [SDL2 framework](https://www.libsdl.org/) to handle all the low-level stuff
 - [SDL_ttf 2.0](https://www.libsdl.org/projects/SDL_ttf/) for rendering fonts
@@ -52,4 +53,4 @@ I do not have a MacOS machine so I cannot test any builds for that OS.
 [Javier Lopez's Tetris tutorial](https://javilop.com/gamedev/tetris-tutorial-in-c-platform-independent-focused-in-game-logic-for-beginners/#comments) was my initial inspiration for starting this project. I also use the same tricks he uses to make the management of the pieces and their rotations easier.
 
 ## License
-The source code is licensed under the [MIT License](https://tldrlegal.com/license/mit-license). Note that the libraries and fonts in the "dependencies" folder are NOT covered by the MIT license. They are distributed under seperate licenses that can be found in their respective folders.
+The source code is licensed under the [MIT License](https://tldrlegal.com/license/mit-license). Note that the CMake find files and any fonts are NOT covered by the MIT license. They are distributed under seperate licenses that can be found in their respective folders.
