@@ -16,10 +16,6 @@
 #include "renderer.hpp"
 #include "texture.hpp"
 
-SDL_Window *gWindow = nullptr;
-SDL_Renderer *gRenderer = nullptr;
-TTF_Font *gFont = nullptr;
-
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)	// equivalent to int main() for Windows
 #else

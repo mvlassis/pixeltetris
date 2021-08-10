@@ -165,7 +165,7 @@ void GameState::drawPiece(Piece p)
     }
 }
 
-void GameState::drawHoldPiece (Piece p)
+void GameState::drawHoldPiece(Piece p)
 {
     for (int row = 0; row < config::matrix_blocks; row++)
     {

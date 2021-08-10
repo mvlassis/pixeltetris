@@ -3,6 +3,8 @@
 #include <iostream>
 
 #include "SDL2/SDL_ttf.h"
+#include "SDL2/SDL_image.h"
+#include "SDL_image.h"
 
 #include "config.hpp"
 
@@ -38,6 +40,25 @@ void Texture::free()
     }
 }
 
+void Texture::loadFromImage (std::string path) 
+{
+    free();
+    SDL_Surface *tempSurf = IMG_Load(path.c_str());
+    if (tempSurf == nullptr)
+    {
+        std::cerr << "Texture: Could not load image from path: " << path << '\n';
+    }
+    else
+    {
+        SDL_SetColorKey(tempSurf, SDL_TRUE, SDL_MapRGB(tempSurf->format, 0xFE, 0xFE, 0xFE));
+        mTexture = SDL_CreateTextureFromSurface(gRenderer, tempSurf);
+        width = tempSurf->w;
+        height = tempSurf->h;
+        SDL_FreeSurface(tempSurf);
+    }
+
+}
+
 // Creates texture from string with a certain color
 void Texture::loadFromText (std::string text, SDL_Color text_color)
 {
@@ -64,9 +85,14 @@ void Texture::loadFromText (std::string text, SDL_Color text_color)
 }
 
 // Renders texture with top left corner at x, y
-void Texture::render (int x, int y)
+void Texture::render (int x, int y, SDL_Rect *clip)
 {
     SDL_Rect r = {x, y, width, height};
+    if (clip != nullptr)
+    {
+        r.w = clip->w;
+        r.h = clip->h;
+    }
     SDL_RenderCopy(gRenderer, mTexture, &r, nullptr);
 }
 

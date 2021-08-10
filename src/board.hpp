@@ -2,10 +2,10 @@
 #define BOARD_HPP
 
 #include "config.hpp"
+#include "piece.hpp"
 
 #include <vector>
 
-#include "piece.hpp"
 
 enum class BlockStatus {block_empty, block_filled};
 

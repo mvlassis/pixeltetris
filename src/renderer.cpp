@@ -7,7 +7,8 @@
 
 #include "config.hpp"
 
-extern TTF_Font *gFont;
+SDL_Renderer *gRenderer = nullptr;
+TTF_Font *gFont = nullptr;
 
 /*
  * ====================================

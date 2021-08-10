@@ -12,8 +12,9 @@ public:
     ~Texture ();
     void free ();
 
+    void loadFromImage (std::string path);
     void loadFromText (std::string text, SDL_Color text_color);
-    void render (int x, int y);
+    void render (int x, int y, SDL_Rect *clip);
     void renderCentered (int x, int y);
 
     int getWidth ();

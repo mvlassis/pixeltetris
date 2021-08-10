@@ -4,10 +4,13 @@
 #include <string>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "texture.hpp"
 
 extern SDL_Renderer *gRenderer;
+extern TTF_Font *gFont;
+
 
 class Renderer
 {  
