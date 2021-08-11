@@ -14,7 +14,7 @@ public:
 
     void loadFromImage (std::string path);
     void loadFromText (std::string text, SDL_Color text_color);
-    void render (int x, int y, SDL_Rect *clip);
+    void render (int x, int y, SDL_Rect *clip = nullptr);
     void renderCentered (int x, int y);
 
     int getWidth ();

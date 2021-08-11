@@ -15,9 +15,9 @@ extern SDL_Renderer *gRenderer; // Global renderer that handles all the drawing
  * ====================================
  */
 
-GameState::GameState(Board *b)
+GameState::GameState()
 {
-    board = b;
+    board = new Board;
 }
 
 // Stores current block, deletes filled lines and creates a new block.
@@ -104,7 +104,44 @@ void GameState::handleEvent(Action action)
     }
 }
 
-void GameState::movePieceDown()
+void GameState::initializeState ()
+{
+    srand(time(0));
+    // Get random first piece
+    currentPiece.piece_type = getRandom(0, 6);
+    currentPiece.rotation = getRandom(0, 3);
+    currentPiece.r = currentPiece.getInitialOffsetR();
+    currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
+
+    // Get random next piece
+    nextPiece.piece_type = getRandom(0, 6);
+    nextPiece.rotation = getRandom(0, 3);
+    nextPiece.r = config::next_box_y;
+    nextPiece.c = config::next_box_x;
+
+    // Load necessary textures
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
+    #else
+    tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
+    #endif
+
+    // And create the correct sprites
+    for (int i = 0; i < 7; i++)
+    {
+        tetrominoSpriteClips[i].x = 16*i;
+        tetrominoSpriteClips[i].y = 0;
+        tetrominoSpriteClips[i].w = 16;
+        tetrominoSpriteClips[i].h = 16;
+    }
+}
+
+bool GameState::isGameOver ()
+{
+    return board->isGameOver();
+}
+
+void GameState::movePieceDown ()
 {
     currentPiece.r++;
     if (!board->isPositionLegal(currentPiece))
@@ -133,16 +170,15 @@ void GameState::drawBoard()
     SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
     SDL_RenderFillRect(gRenderer, &right_column);
 
+    // Then draw the placed blocks
     for (int row = 0; row < config::playfield_height; row++)
     {
         for (int col = 0; col < config::playfield_width; col++)
         {
             if (!board->isBlockFree(row, col))
             {
-                SDL_Rect r = {config::width_to_playfield + col * config::block_size, config::height_to_playfield + row * config::block_size,
-                              config::block_size, config::block_size};
-                SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0xFF, 0xFF);
-                SDL_RenderFillRect(gRenderer, &r);
+                tetrominoSprites.render(config::width_to_playfield + col * config::block_size, config::height_to_playfield + row *config::block_size,
+                                        &tetrominoSpriteClips[board->getTetromino(row, col)]);
             }
         }
     }
@@ -156,10 +192,8 @@ void GameState::drawPiece(Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                SDL_Rect r = {config::width_to_playfield + (col + p.c) * config::block_size, config::height_to_playfield + (row + p.r) * config::block_size,
-                              config::block_size, config::block_size};
-                SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xAA, 0xAA, 0xFF);
-                SDL_RenderFillRect(gRenderer, &r);
+                tetrominoSprites.render(config::width_to_playfield + (col+p.c) * config::block_size, config::height_to_playfield + (row+p.r) *config::block_size,
+                                        &tetrominoSpriteClips[p.piece_type]);
             }
         }
     }
@@ -173,10 +207,8 @@ void GameState::drawHoldPiece(Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                SDL_Rect r = {config::next_box_x + col * config::block_size, config::next_box_y + row * config::block_size,
-                              config::block_size, config::block_size};
-                SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xAA, 0xAA, 0xFF);
-                SDL_RenderFillRect(gRenderer, &r);
+                tetrominoSprites.render(config::next_box_x + col*config::block_size, config::next_box_y + row*config::block_size,
+                                        &tetrominoSpriteClips[p.piece_type]);
             }
         }
     }
@@ -187,18 +219,3 @@ int GameState::getRandom(int lower_limit, int upper_limit)
     return rand() % (upper_limit - lower_limit + 1) + lower_limit;
 }
 
-void GameState::initializeState()
-{
-    srand(time(0));
-    // Get random first piece
-    currentPiece.piece_type = getRandom(0, 6);
-    currentPiece.rotation = getRandom(0, 3);
-    currentPiece.r = currentPiece.getInitialOffsetR();
-    currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
-
-    // Get random next piece
-    nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = getRandom(0, 3);
-    nextPiece.r = config::next_box_y;
-    nextPiece.c = config::next_box_x;
-}

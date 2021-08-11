@@ -23,8 +23,7 @@ int main(int argc, char **argv)
 #endif
 {
     InputManager *inManager  = new InputManager;
-    Board *board = new Board;
-    GameState gamestate(board);
+    GameState gamestate;
     Renderer renderer;
     if (initialize())
     {
@@ -50,7 +49,7 @@ int main(int argc, char **argv)
         inManager->clearEventQueue();
         SDL_Event event;
         unsigned long long time_snap1 = SDL_GetTicks();
-        while (!inManager->isGameExiting() && !board->isGameOver())
+        while (!inManager->isGameExiting() && !gamestate.isGameOver())
         {
             while (SDL_PollEvent(&event) != 0)
             {
@@ -85,7 +84,6 @@ int main(int argc, char **argv)
     }
     
     delete inManager;
-    delete board;
     std::cerr << "Now exiting!\n";
     close();
     return 0;

@@ -50,7 +50,7 @@ void Texture::loadFromImage (std::string path)
     }
     else
     {
-        SDL_SetColorKey(tempSurf, SDL_TRUE, SDL_MapRGB(tempSurf->format, 0xFE, 0xFE, 0xFE));
+        // SDL_SetColorKey(tempSurf, SDL_TRUE, SDL_MapRGB(tempSurf->format, 0xFE, 0xFE, 0xFE)); 
         mTexture = SDL_CreateTextureFromSurface(gRenderer, tempSurf);
         width = tempSurf->w;
         height = tempSurf->h;
@@ -93,7 +93,7 @@ void Texture::render (int x, int y, SDL_Rect *clip)
         r.w = clip->w;
         r.h = clip->h;
     }
-    SDL_RenderCopy(gRenderer, mTexture, &r, nullptr);
+    SDL_RenderCopy(gRenderer, mTexture, clip, &r);
 }
 
 // Renders texture centered at x, y

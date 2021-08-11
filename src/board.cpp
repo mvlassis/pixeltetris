@@ -17,6 +17,11 @@ Board::Board()
     }
 }
 
+int Board::getTetromino (int r, int c)
+{
+    return int(board_state[r][c])-1;
+}
+
 // True if a block is unoccupied
 bool Board::isBlockFree (int r, int c)
 {
@@ -64,7 +69,7 @@ void Board::storePiece (Piece p)
         {
             if (p.getBlockType(row-p.r, col-p.c) != 0)
             {
-                board_state[row][col] = BlockStatus::block_filled;
+                board_state[row][col] = static_cast<BlockStatus>(1+p.piece_type);
             }
         }
     }
@@ -97,7 +102,7 @@ bool Board::isGameOver ()
     bool game_over = false;
     for (int col = 0; col < config::playfield_width; col++)
     {
-        if (board_state[0][col] == BlockStatus::block_filled)
+        if (board_state[0][col] != BlockStatus::block_empty)
         {
             game_over = true;
             break;

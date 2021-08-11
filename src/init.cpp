@@ -61,10 +61,8 @@ bool loadMedia()
     bool success = true;
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     gFont = TTF_OpenFont("../../assets/FiraSans-Regular.ttf", 28);
-    tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
     #else
     gFont = TTF_OpenFont("../assets/FiraSans-Regular.ttf", 28);
-    tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
     #endif
     if (gFont == nullptr)
     {

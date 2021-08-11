@@ -16,11 +16,11 @@ namespace config
     // Board class
     const int width_to_playfield = 245;       // in pixels
     const int height_to_playfield = 30;       // in pixels
-    const int block_size = 15;                // in pixels
+    const int block_size = 16;                // in pixels
     const int playfield_width = 10;           // in blocks
     const int playfield_height = 20;          // in blocks
     const int frame_width = 5;                // frame that surrounds the playfield; in pixels
-    const int board_height = 50;              // distance from botton where the playfield begins; in pixels
+    const int board_height = 30;              // distance from botton where the playfield begins; in pixels
     const int matrix_blocks = 5;              // matrix that holds tetromino info; in blocks
 
 
