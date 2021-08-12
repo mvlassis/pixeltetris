@@ -18,7 +18,7 @@ TTF_Font *gFont = nullptr;
 
 void Renderer::clearScreen ()
 {
-    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(gRenderer, config::background_r_light, config::background_g_light, config::background_b_light, 0xFF);
     SDL_RenderClear(gRenderer);
 }
 

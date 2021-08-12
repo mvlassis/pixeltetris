@@ -122,17 +122,26 @@ void GameState::initializeState ()
     // Load necessary textures
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
+    playfieldFrame.loadFromImage("../../assets/playfieldFrame.png");
     #else
     tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
+    playfieldFrame.loadFromImage("../assets/playfieldFrame.png");
     #endif
 
-    // And create the correct sprites
+    // Create the right clips sprites
     for (int i = 0; i < 7; i++)
     {
         tetrominoSpriteClips[i].x = 16*i;
         tetrominoSpriteClips[i].y = 0;
         tetrominoSpriteClips[i].w = 16;
         tetrominoSpriteClips[i].h = 16;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        playfieldFrameClips[i].x = config::frame_sprite_size*i;
+        playfieldFrameClips[i].y = 0;
+        playfieldFrameClips[i].w = config::frame_sprite_size;
+        playfieldFrameClips[i].h = config::frame_sprite_size;
     }
 }
 
@@ -160,15 +169,37 @@ void GameState::movePieceDown ()
 void GameState::drawBoard()
 {
     // First draw the playfield frame
-    SDL_Rect left_column = {config::width_to_playfield - config::frame_width, config::height_to_playfield,
-                            config::frame_width, config::block_size * config::playfield_height};
-    SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
-    SDL_RenderFillRect(gRenderer, &left_column);
+    // SDL_Rect left_column = {config::width_to_playfield - config::frame_width, config::height_to_playfield,
+    //                         config::frame_width, config::block_size * config::playfield_height};
+    // SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
+    // SDL_RenderFillRect(gRenderer, &left_column);
 
-    SDL_Rect right_column = {config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield,
-                             config::frame_width, config::block_size * config::playfield_height};
-    SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
-    SDL_RenderFillRect(gRenderer, &right_column);
+    // SDL_Rect right_column = {config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield,
+    //                          config::frame_width, config::block_size * config::playfield_height};
+    // SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
+    // SDL_RenderFillRect(gRenderer, &right_column);
+
+    for (int i = 0; i < 2*config::playfield_height; i++)
+    {
+        // Left frame
+        playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + i*config::frame_sprite_size,
+            &playfieldFrameClips[0]);
+        // Right frame
+        playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width - (config::frame_sprite_size -
+        config::frame_width), config::height_to_playfield + i*config::frame_sprite_size, &playfieldFrameClips[0]);
+    }
+    // Then the 2 corners
+    playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + 
+        config::block_size*config::playfield_height, &playfieldFrameClips[2]);
+    playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield + 
+        config::block_size*config::playfield_height, &playfieldFrameClips[3]);
+    
+    for (int i = 0; i < 2*config::playfield_width; i++)
+    {
+        // And the bottom frame
+        playfieldFrame.render(config::width_to_playfield + i*config::frame_sprite_size, config::height_to_playfield +
+            config::block_size*config::playfield_height + (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[1]);
+    }
 
     // Then draw the placed blocks
     for (int row = 0; row < config::playfield_height; row++)
@@ -218,4 +249,3 @@ int GameState::getRandom(int lower_limit, int upper_limit)
 {
     return rand() % (upper_limit - lower_limit + 1) + lower_limit;
 }
-

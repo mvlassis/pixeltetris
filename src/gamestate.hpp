@@ -27,6 +27,8 @@ private:
     std::queue<Piece> nextPieces;                       // Holds the next 2 pieces
     Texture tetrominoSprites;
     SDL_Rect tetrominoSpriteClips[7];
+    Texture playfieldFrame;
+    SDL_Rect playfieldFrameClips[4];
 
     void drawBoard ();
     void drawPiece (Piece p);
