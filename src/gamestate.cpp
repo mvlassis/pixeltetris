@@ -36,7 +36,7 @@ void GameState::createNewPiece()
     currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
 
     nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = getRandom(0, 3);
+    nextPiece.rotation = 0; // Pieces must always start flat according to the offical Tetris guidelines
 }
 
 void GameState::drawState()
@@ -109,13 +109,13 @@ void GameState::initializeState ()
     srand(time(0));
     // Get random first piece
     currentPiece.piece_type = getRandom(0, 6);
-    currentPiece.rotation = getRandom(0, 3);
+    currentPiece.rotation = 0;   // Pieces must always start flat according to the offical Tetris guidelines
     currentPiece.r = currentPiece.getInitialOffsetR();
     currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
 
     // Get random next piece
     nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = getRandom(0, 3);
+    nextPiece.rotation = 0;     // Pieces must always start flat according to the offical Tetris guidelines
     nextPiece.r = config::next_box_y;
     nextPiece.c = config::next_box_x;
 

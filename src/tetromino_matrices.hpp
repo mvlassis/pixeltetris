@@ -234,7 +234,7 @@ int tetromino_initial_position [7][4][2] =
 {
     // I piece
     {
-        {-2, -2},
+        {-2, -3},
         {0, -3},
         {-2, -2},
         {0, -3}
@@ -242,7 +242,7 @@ int tetromino_initial_position [7][4][2] =
 
     // O piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -2},
         {-2, -3}
@@ -250,7 +250,7 @@ int tetromino_initial_position [7][4][2] =
 
     // T piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -3},
         {-2, -3}
@@ -258,7 +258,7 @@ int tetromino_initial_position [7][4][2] =
 
     // S piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -2},
         {-2, -3}
@@ -266,7 +266,7 @@ int tetromino_initial_position [7][4][2] =
 
     // Z piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -3},
         {-2, -3}
@@ -274,7 +274,7 @@ int tetromino_initial_position [7][4][2] =
 
     // J piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -3},
         {-2, -3}
@@ -282,7 +282,7 @@ int tetromino_initial_position [7][4][2] =
 
     // L piece
     {
-        {-2, -2},
+        {-2, -3},
         {-2, -3},
         {-2, -3},
         {-2, -3}
