@@ -190,15 +190,15 @@ void GameState::drawBoard()
     }
     // Then the 2 corners
     playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + 
-        config::block_size*config::playfield_height, &playfieldFrameClips[2]);
+        config::block_size*config::playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[2]);
     playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield + 
-        config::block_size*config::playfield_height, &playfieldFrameClips[3]);
+        config::block_size*config::playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[3]);
     
     for (int i = 0; i < 2*config::playfield_width; i++)
     {
         // And the bottom frame
         playfieldFrame.render(config::width_to_playfield + i*config::frame_sprite_size, config::height_to_playfield +
-            config::block_size*config::playfield_height + (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[1]);
+            config::block_size*config::playfield_height, &playfieldFrameClips[1]);
     }
 
     // Then draw the placed blocks
