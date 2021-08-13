@@ -16,14 +16,15 @@ public:
     void createNewPiece ();                             // Create a new random piece
     void drawState ();                                  // Draw the board and all pieces after each frame
     void handleEvent (Action action);                   // Handle input
-    void initializeState ();
+    void initializeState ();                            // Create new board and load necessary textures
     bool isGameOver ();                                 // True if the game has ended
     void movePieceDown ();
 private:
+    bool hold_block_used;                               // True if the hold block has been used, resets after a block is placed
     Board *board;
     Piece currentPiece {0, 0};
-    Piece nextPiece {0, 0};
     Piece holdPiece {0, 0};
+    Piece nextPiece {0, 0};
     std::queue<Piece> nextPieces;                       // Holds the next 2 pieces
     Texture tetrominoSprites;
     SDL_Rect tetrominoSpriteClips[7];

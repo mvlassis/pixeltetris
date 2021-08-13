@@ -102,7 +102,7 @@ bool Board::isGameOver ()
     bool game_over = false;
     for (int col = 0; col < config::playfield_width; col++)
     {
-        if (board_state[0][col] != BlockStatus::block_empty)
+        if (board_state[0][col] != BlockStatus::block_empty || board_state[1][col] != BlockStatus::block_empty)
         {
             game_over = true;
             break;

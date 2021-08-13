@@ -3,10 +3,10 @@
 
 #include <SDL2/SDL.h>
 
-// A simple enumeration to hold all possible actions for a piece.
+// A simple enumeration to hold all possible actions when playing.
 enum class Action
 {
-    stay_idle, move_down, move_left, move_right, drop, rotate
+    stay_idle, move_down, move_left, move_right, drop, rotate, hold
 };
 
 class InputManager

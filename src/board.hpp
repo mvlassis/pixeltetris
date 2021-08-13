@@ -21,7 +21,7 @@ public:
     bool isGameOver ();                 // True if the game has ended; Note: the row index starts from the top
 
 private:
-    BlockStatus board_state [config::playfield_height][config::playfield_width];
+    BlockStatus board_state [config::playfield_height][config::playfield_width]; // +2 is for spawning above the playfield
     std::vector<Piece> pieces;
 
     void deleteLine (int y);            // Clears a filled row and moves all other blocks properly

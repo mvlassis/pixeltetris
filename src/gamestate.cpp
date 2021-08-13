@@ -25,7 +25,10 @@ void GameState::checkState()
 {
     board->storePiece(currentPiece);
     board->clearFullLines();
-    createNewPiece();
+    if (!board->isGameOver())
+    {
+        createNewPiece();
+    }
 }
 
 void GameState::createNewPiece()
@@ -34,6 +37,23 @@ void GameState::createNewPiece()
     currentPiece.rotation = nextPiece.rotation;
     currentPiece.r = currentPiece.getInitialOffsetR();
     currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
+
+    for (int i = 0; i < 2; i++)
+    { 
+        currentPiece.r++;
+        if (!board->isPositionLegal(currentPiece))
+        {
+            currentPiece.r--;
+        }
+    }
+    if (currentPiece.piece_type > 1)
+    {
+            currentPiece.r++;
+            if (!board->isPositionLegal(currentPiece))
+            {
+                currentPiece.r--;
+            }
+    }
 
     nextPiece.piece_type = getRandom(0, 6);
     nextPiece.rotation = 0; // Pieces must always start flat according to the offical Tetris guidelines
@@ -108,14 +128,9 @@ void GameState::initializeState ()
 {
     srand(time(0));
     // Get random first piece
-    currentPiece.piece_type = getRandom(0, 6);
-    currentPiece.rotation = 0;   // Pieces must always start flat according to the offical Tetris guidelines
-    currentPiece.r = currentPiece.getInitialOffsetR();
-    currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
-
-    // Get random next piece
     nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = 0;     // Pieces must always start flat according to the offical Tetris guidelines
+    nextPiece.rotation = 0;                 // Pieces must always start flat according to the offical Tetris guidelines
+    createNewPiece(); 
     nextPiece.r = config::next_box_y;
     nextPiece.c = config::next_box_x;
 
@@ -168,18 +183,7 @@ void GameState::movePieceDown ()
 
 void GameState::drawBoard()
 {
-    // First draw the playfield frame
-    // SDL_Rect left_column = {config::width_to_playfield - config::frame_width, config::height_to_playfield,
-    //                         config::frame_width, config::block_size * config::playfield_height};
-    // SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
-    // SDL_RenderFillRect(gRenderer, &left_column);
-
-    // SDL_Rect right_column = {config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield,
-    //                          config::frame_width, config::block_size * config::playfield_height};
-    // SDL_SetRenderDrawColor(gRenderer, 0x00, 0xAA, 0xFF, 0xFF);
-    // SDL_RenderFillRect(gRenderer, &right_column);
-
-    for (int i = 0; i < 2*config::playfield_height; i++)
+    for (int i = 0; i < 2*config::true_playfield_height; i++)
     {
         // Left frame
         playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + i*config::frame_sprite_size,
@@ -190,15 +194,15 @@ void GameState::drawBoard()
     }
     // Then the 2 corners
     playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + 
-        config::block_size*config::playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[2]);
+        config::block_size*config::true_playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[2]);
     playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield + 
-        config::block_size*config::playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[3]);
+        config::block_size*config::true_playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[3]);
     
     for (int i = 0; i < 2*config::playfield_width; i++)
     {
         // And the bottom frame
         playfieldFrame.render(config::width_to_playfield + i*config::frame_sprite_size, config::height_to_playfield +
-            config::block_size*config::playfield_height, &playfieldFrameClips[1]);
+            config::block_size*config::true_playfield_height, &playfieldFrameClips[1]);
     }
 
     // Then draw the placed blocks
@@ -208,8 +212,8 @@ void GameState::drawBoard()
         {
             if (!board->isBlockFree(row, col))
             {
-                tetrominoSprites.render(config::width_to_playfield + col * config::block_size, config::height_to_playfield + row *config::block_size,
-                                        &tetrominoSpriteClips[board->getTetromino(row, col)]);
+                tetrominoSprites.render(config::width_to_playfield + col * config::block_size, config::height_to_playfield +
+                (row-(config::playfield_height-config::true_playfield_height))*config::block_size, &tetrominoSpriteClips[board->getTetromino(row, col)]);
             }
         }
     }
@@ -223,8 +227,8 @@ void GameState::drawPiece(Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                tetrominoSprites.render(config::width_to_playfield + (col+p.c) * config::block_size, config::height_to_playfield + (row+p.r) *config::block_size,
-                                        &tetrominoSpriteClips[p.piece_type]);
+                tetrominoSprites.render(config::width_to_playfield + (col+p.c) * config::block_size, config::height_to_playfield +
+                (row+p.r-(config::playfield_height-config::true_playfield_height)) *config::block_size, &tetrominoSpriteClips[p.piece_type]);
             }
         }
     }
