@@ -69,6 +69,12 @@ void InputManager::pollAction(SDL_Event event)
                 action = Action::rotate;
                 break;
             }
+
+            case SDLK_c: case SDLK_LSHIFT:
+            {
+                action = Action::hold;
+                break;
+            }
         }
     }
     else

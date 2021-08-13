@@ -43,13 +43,14 @@ I do not have a MacOS machine so I cannot test any builds for that OS. However, 
 - Left/Right/Down arrow keys: Move the tetromino
 - Up arrow key: Rotate the tetromino
 - Space: Hard drop tetromino
+- Shift/C: Swap with hold block
 - Q: Exit the game (you can also just click the X button on the top right of the window)
 - That's all!
 
 ## Features to add
-- Create sprites for all objects
+- ~~Create sprites for all objects~~
+- ~~Add a hold block~~
 - Add a ghost block (the outline that shows the position of the piece if dropped)
-- Add a hold block
 - Add a simple menu
 - Add basic sound effects
 ## Third party tools

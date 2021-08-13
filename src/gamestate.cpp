@@ -1,3 +1,5 @@
+#include "gamestate.hpp"
+
 #include <cstdlib>
 #include <ctime>
 
@@ -5,7 +7,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "gamestate.hpp"
+#include "utilities.hpp"
+
 
 extern SDL_Renderer *gRenderer; // Global renderer that handles all the drawing
 
@@ -15,13 +18,13 @@ extern SDL_Renderer *gRenderer; // Global renderer that handles all the drawing
  * ====================================
  */
 
-GameState::GameState()
+GameState::GameState ()
 {
     board = new Board;
 }
 
 // Stores current block, deletes filled lines and creates a new block.
-void GameState::checkState()
+void GameState::checkState ()
 {
     board->storePiece(currentPiece);
     board->clearFullLines();
@@ -29,9 +32,10 @@ void GameState::checkState()
     {
         createNewPiece();
     }
+    hold_block_used = false;
 }
 
-void GameState::createNewPiece()
+void GameState::createNewPiece ()
 {
     currentPiece.piece_type = nextPiece.piece_type;
     currentPiece.rotation = nextPiece.rotation;
@@ -59,14 +63,15 @@ void GameState::createNewPiece()
     nextPiece.rotation = 0; // Pieces must always start flat according to the offical Tetris guidelines
 }
 
-void GameState::drawState()
+void GameState::drawState ()
 {
     drawBoard();
-    drawPiece(currentPiece);
-    drawHoldPiece(nextPiece);
+    drawCurrentPiece(currentPiece);
+    if (!hold_block_first_time) drawHoldPiece(holdPiece);
+    drawNextPiece(nextPiece);
 }
 
-void GameState::handleEvent(Action action)
+void GameState::handleEvent (Action action)
 {
     switch(action)
     {
@@ -121,12 +126,51 @@ void GameState::handleEvent(Action action)
             }
             break;
         }
+
+        case Action::hold:
+        {
+            if (hold_block_first_time)
+            {
+                holdPiece = Piece(currentPiece);
+                holdPiece.rotation = 0;
+                createNewPiece();
+                hold_block_first_time = false;
+                hold_block_used = true;
+            }
+            else if (!hold_block_used)
+            {
+                swap(currentPiece, holdPiece);
+                holdPiece.rotation = 0;
+                currentPiece.r = currentPiece.getInitialOffsetR();
+                currentPiece.c = config::playfield_width / 2 + currentPiece.getInitialOffsetC();
+
+                for (int i = 0; i < 2; i++)
+                { 
+                    currentPiece.r++;
+                    if (!board->isPositionLegal(currentPiece))
+                    {
+                        currentPiece.r--;
+                    }
+                }
+                if (currentPiece.piece_type > 1)
+                {
+                        currentPiece.r++;
+                        if (!board->isPositionLegal(currentPiece))
+                        {
+                            currentPiece.r--;
+                        }
+                }
+                hold_block_used = true;
+            }
+        }
     }
 }
 
 void GameState::initializeState ()
 {
     srand(time(0));
+    hold_block_first_time = true;
+    hold_block_used = false;
     // Get random first piece
     nextPiece.piece_type = getRandom(0, 6);
     nextPiece.rotation = 0;                 // Pieces must always start flat according to the offical Tetris guidelines
@@ -181,7 +225,7 @@ void GameState::movePieceDown ()
  * ====================================
  */
 
-void GameState::drawBoard()
+void GameState::drawBoard ()
 {
     for (int i = 0; i < 2*config::true_playfield_height; i++)
     {
@@ -219,7 +263,7 @@ void GameState::drawBoard()
     }
 }
 
-void GameState::drawPiece(Piece p)
+void GameState::drawCurrentPiece (Piece p)
 {
     for (int row = 0; row < config::matrix_blocks; row++)
     {
@@ -234,7 +278,22 @@ void GameState::drawPiece(Piece p)
     }
 }
 
-void GameState::drawHoldPiece(Piece p)
+void GameState::drawHoldPiece (Piece p)
+{
+    for (int row = 0; row < config::matrix_blocks; row++)
+    {
+        for (int col = 0; col < config::matrix_blocks; col++)
+        {
+            if (p.getBlockType(row, col) != 0)
+            {
+                tetrominoSprites.render(config::hold_box_x + col*config::block_size, config::hold_box_y + row*config::block_size,
+                                        &tetrominoSpriteClips[p.piece_type]);
+            }
+        }
+    }
+}
+
+void GameState::drawNextPiece (Piece p)
 {
     for (int row = 0; row < config::matrix_blocks; row++)
     {
@@ -249,7 +308,7 @@ void GameState::drawHoldPiece(Piece p)
     }
 }
 
-int GameState::getRandom(int lower_limit, int upper_limit)
+int GameState::getRandom (int lower_limit, int upper_limit)
 {
     return rand() % (upper_limit - lower_limit + 1) + lower_limit;
 }
