@@ -35,12 +35,14 @@ namespace config
 
     // Constants relating to Tetris
     const int wait_time = 1000;                                     // Time in milliseconds
+    const bool ghost_piece_enabled = true;                                // Enables or disables the ghost piece to reduce misdrops
 
     // Visuals
     const SDL_Color default_text_color = {0x00, 0x00, 0x00, 0xFF};  // Default color for all text
     const Uint8 background_r_light = 0xF9;                          // Background color for light mode
     const Uint8 background_g_light = 0xE6;
     const Uint8 background_b_light = 0xCF;
+    const Uint8 transparency_alpha = 100;                           // Default alpha for transparency (with 255 being no transparency)                             
 }
 
 #endif // CONFIG_HPP

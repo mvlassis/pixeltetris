@@ -50,12 +50,13 @@ I do not have a MacOS machine so I cannot test any builds for that OS. However, 
 ## Features to add
 - ~~Create sprites for all objects~~
 - ~~Add a hold block~~
-- Add a ghost block (the outline that shows the position of the piece if dropped)
+- ~~Add a ghost block (the outline that shows the position of the piece if dropped)~~
 - Add a simple menu
 - Add basic sound effects
 ## Third party tools
 - [SDL2 framework](https://www.libsdl.org/) to handle all the low-level stuff
 - [SDL_ttf 2.0](https://www.libsdl.org/projects/SDL_ttf/) for rendering fonts
+- [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/) for loading images
 - The font I use is [Fira Sans](https://fonts.google.com/specimen/Fira+Sans)
 - [CMake scripts](https://github.com/tcbrindle/sdl2-cmake-scripts) to find SDL2, SDL_ttf, and SDL_image
 

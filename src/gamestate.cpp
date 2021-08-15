@@ -67,6 +67,7 @@ void GameState::drawState ()
 {
     drawBoard();
     drawCurrentPiece(currentPiece);
+    if (!board->isGameOver() && config::ghost_piece_enabled) drawGhostPiece(currentPiece);
     if (!hold_block_first_time) drawHoldPiece(holdPiece);
     drawNextPiece(nextPiece);
 }
@@ -276,6 +277,33 @@ void GameState::drawCurrentPiece (Piece p)
             }
         }
     }
+}
+
+// Draws the ghost piece of the piece given
+void GameState::drawGhostPiece (Piece p)
+{
+    ghostPiece = p;
+    while (board->isPositionLegal(ghostPiece))
+    {
+        ghostPiece.r++;
+    }
+    ghostPiece.r--;
+
+    tetrominoSprites.setAlphaMode(config::transparency_alpha);  // Change transparency to render the ghost piece
+
+    for (int row = 0; row < config::matrix_blocks; row++)
+    {
+        for (int col = 0; col < config::matrix_blocks; col++)
+        {
+            if (ghostPiece.getBlockType(row, col) != 0)
+            {
+                tetrominoSprites.render(config::width_to_playfield + (col+ghostPiece.c) * config::block_size, config::height_to_playfield +
+                (row+ghostPiece.r-(config::playfield_height-config::true_playfield_height))*config::block_size, &tetrominoSpriteClips[ghostPiece.piece_type]);
+            }
+        }
+    }
+
+    tetrominoSprites.setAlphaMode(255); // Don't forget to change it back to normal!
 }
 
 void GameState::drawHoldPiece (Piece p)

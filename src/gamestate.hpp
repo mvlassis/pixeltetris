@@ -24,6 +24,7 @@ private:
     bool hold_block_used;                               // True if the hold block has been used, resets after a block is placed
     Board *board;
     Piece currentPiece {0, 0};
+    Piece ghostPiece {0, 0};
     Piece holdPiece {0, 0};
     Piece nextPiece {0, 0};
     std::queue<Piece> nextPieces;                       // Holds the next 2 pieces
@@ -34,6 +35,7 @@ private:
 
     void drawBoard ();
     void drawCurrentPiece (Piece p);
+    void drawGhostPiece (Piece p);
     void drawHoldPiece (Piece p);
     void drawNextPiece (Piece p);
     int getRandom (int lower_limit, int upper_limit);   // Return a random number in this range
