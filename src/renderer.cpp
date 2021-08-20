@@ -7,7 +7,6 @@
 
 #include "config.hpp"
 
-SDL_Renderer *gRenderer = nullptr;
 TTF_Font *gFont = nullptr;
 
 /*
@@ -16,10 +15,22 @@ TTF_Font *gFont = nullptr;
  * ====================================
  */
 
+void Renderer::initialize (SDL_Window *window)
+{
+    mSDLRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    clearScreen();
+}
+
+Renderer::~Renderer ()
+{
+    SDL_DestroyRenderer(mSDLRenderer);
+    mSDLRenderer = nullptr;
+}
+
 void Renderer::clearScreen ()
 {
-    SDL_SetRenderDrawColor(gRenderer, config::background_r_light, config::background_g_light, config::background_b_light, 0xFF);
-    SDL_RenderClear(gRenderer);
+    SDL_SetRenderDrawColor(mSDLRenderer, config::background_r_light, config::background_g_light, config::background_b_light, 0xFF);
+    SDL_RenderClear(mSDLRenderer);
 }
 
 void Renderer::renderTexture (Texture *texture, int x, int y)
@@ -29,5 +40,5 @@ void Renderer::renderTexture (Texture *texture, int x, int y)
 
 void Renderer::updateScreen ()
 {
-    SDL_RenderPresent(gRenderer);
+    SDL_RenderPresent(mSDLRenderer);
 }

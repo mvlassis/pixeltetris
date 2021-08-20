@@ -1,38 +1,131 @@
 #include "gamestate.hpp"
 
-#include <cstdlib>
-#include <ctime>
-
-#include <iostream>
-
-#include <SDL2/SDL.h>
-
+#include "inputmanager.hpp"
+#include "renderer.hpp"
+#include "texture.hpp"
 #include "utilities.hpp"
 
+GameState::GameState (InputManager *manager, Renderer *renderer) : State (manager, renderer) {}
 
-extern SDL_Renderer *gRenderer; // Global renderer that handles all the drawing
+void GameState::initialize ()
+{
+    board = new Board;
+    srand(time(0));
+    hold_block_first_time = true;
+    hold_block_used = false;
+    
+    // Get random first piece
+    nextPiece.piece_type = getRandom(0, 6);
+    nextPiece.rotation = 0;                 // Pieces must always start flat according to the offical Tetris guidelines
+    createNewPiece(); 
+    nextPiece.r = config::next_box_y;
+    nextPiece.c = config::next_box_x;
+
+    // Load necessary textures
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
+    playfieldFrame.loadFromImage("../../assets/playfieldFrame.png");
+    #else
+    tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
+    playfieldFrame.loadFromImage("../assets/playfieldFrame.png");
+    #endif
+
+    // Create the right clips sprites
+    for (int i = 0; i < 7; i++)
+    {
+        tetrominoSpriteClips[i].x = 16*i;
+        tetrominoSpriteClips[i].y = 0;
+        tetrominoSpriteClips[i].w = 16;
+        tetrominoSpriteClips[i].h = 16;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        playfieldFrameClips[i].x = config::frame_sprite_size*i;
+        playfieldFrameClips[i].y = 0;
+        playfieldFrameClips[i].w = config::frame_sprite_size;
+        playfieldFrameClips[i].h = config::frame_sprite_size;
+    }
+}
+
+void GameState::exit ()
+{
+    delete board;
+    tetrominoSprites.free();
+    playfieldFrame.free();
+
+    nextStateID = STATE_POP;
+}
+
+void GameState::run ()
+{
+    int countdown = 3;
+    Texture countdown_text (mRenderer);
+    while (countdown > 0)
+    {
+        mRenderer->clearScreen();
+        draw();
+        countdown_text.loadFromText(std::to_string(countdown), config::default_text_color);
+        mRenderer->renderTexture(&countdown_text, config::logical_window_width/2, config::logical_window_height/2);
+        mRenderer->updateScreen();
+        SDL_Delay(1000);
+        countdown--;
+    }
+
+    mInputManager->clearEventQueue();
+    SDL_Event event;
+    unsigned long long time_snap1 = SDL_GetTicks();
+    while (!mInputManager->isGameExiting() && !isGameOver())
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
+            mInputManager->pollAction(event);
+            handleEvent(mInputManager->getAction());
+        }
+        
+        unsigned long long time_snap2 = SDL_GetTicks();
+        if (time_snap2 - time_snap1 >= config::wait_time)
+        {
+            movePieceDown();
+            time_snap1 = SDL_GetTicks();
+        }
+        mRenderer->clearScreen();
+        draw();
+        mRenderer->updateScreen();
+    }
+
+    Texture gameover_text (mRenderer);
+    gameover_text.loadFromText("Game Over!", config::default_text_color);
+    while (!mInputManager->isGameExiting())
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
+            mInputManager->pollAction(event);
+        }
+            mRenderer->clearScreen();
+            draw();
+            mRenderer->renderTexture(&gameover_text, config::logical_window_width/2, config::logical_window_height/2);
+            mRenderer->updateScreen();
+    }
+}
+
+void GameState::draw( )
+{
+    drawBoard();
+    drawCurrentPiece(currentPiece);
+    if (!board->isGameOver() && config::ghost_piece_enabled) drawGhostPiece(currentPiece);
+    if (!hold_block_first_time) drawHoldPiece(holdPiece);
+    drawNextPiece(nextPiece);
+}
 
 /*
  * ====================================
- * Public methods start here
+ * Private methods start here
  * ====================================
  */
 
-GameState::GameState ()
+bool GameState::isGameOver()
 {
-    board = new Board;
-}
-
-// Stores current block, deletes filled lines and creates a new block.
-void GameState::checkState ()
-{
-    board->storePiece(currentPiece);
-    board->clearFullLines();
-    if (!board->isGameOver())
-    {
-        createNewPiece();
-    }
-    hold_block_used = false;
+    return board->isGameOver();
 }
 
 void GameState::createNewPiece ()
@@ -63,13 +156,15 @@ void GameState::createNewPiece ()
     nextPiece.rotation = 0; // Pieces must always start flat according to the offical Tetris guidelines
 }
 
-void GameState::drawState ()
+void GameState::checkState ()
 {
-    drawBoard();
-    drawCurrentPiece(currentPiece);
-    if (!board->isGameOver() && config::ghost_piece_enabled) drawGhostPiece(currentPiece);
-    if (!hold_block_first_time) drawHoldPiece(holdPiece);
-    drawNextPiece(nextPiece);
+    board->storePiece(currentPiece);
+    board->clearFullLines();
+    if (!board->isGameOver())
+    {
+        createNewPiece();
+    }
+    hold_block_used = false;
 }
 
 void GameState::handleEvent (Action action)
@@ -167,49 +262,6 @@ void GameState::handleEvent (Action action)
     }
 }
 
-void GameState::initializeState ()
-{
-    srand(time(0));
-    hold_block_first_time = true;
-    hold_block_used = false;
-    // Get random first piece
-    nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = 0;                 // Pieces must always start flat according to the offical Tetris guidelines
-    createNewPiece(); 
-    nextPiece.r = config::next_box_y;
-    nextPiece.c = config::next_box_x;
-
-    // Load necessary textures
-    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
-    playfieldFrame.loadFromImage("../../assets/playfieldFrame.png");
-    #else
-    tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
-    playfieldFrame.loadFromImage("../assets/playfieldFrame.png");
-    #endif
-
-    // Create the right clips sprites
-    for (int i = 0; i < 7; i++)
-    {
-        tetrominoSpriteClips[i].x = 16*i;
-        tetrominoSpriteClips[i].y = 0;
-        tetrominoSpriteClips[i].w = 16;
-        tetrominoSpriteClips[i].h = 16;
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        playfieldFrameClips[i].x = config::frame_sprite_size*i;
-        playfieldFrameClips[i].y = 0;
-        playfieldFrameClips[i].w = config::frame_sprite_size;
-        playfieldFrameClips[i].h = config::frame_sprite_size;
-    }
-}
-
-bool GameState::isGameOver ()
-{
-    return board->isGameOver();
-}
-
 void GameState::movePieceDown ()
 {
     currentPiece.r++;
@@ -219,12 +271,6 @@ void GameState::movePieceDown ()
         checkState();
     }
 }
-
-/*
- * ====================================
- * Private methods start here
- * ====================================
- */
 
 void GameState::drawBoard ()
 {
@@ -279,7 +325,36 @@ void GameState::drawCurrentPiece (Piece p)
     }
 }
 
-// Draws the ghost piece of the piece given
+void GameState::drawNextPiece (Piece p)
+{
+    for (int row = 0; row < config::matrix_blocks; row++)
+    {
+        for (int col = 0; col < config::matrix_blocks; col++)
+        {
+            if (p.getBlockType(row, col) != 0)
+            {
+                tetrominoSprites.render(config::next_box_x + col*config::block_size, config::next_box_y + row*config::block_size,
+                                        &tetrominoSpriteClips[p.piece_type]);
+            }
+        }
+    }
+}
+
+void GameState::drawHoldPiece (Piece p)
+{
+    for (int row = 0; row < config::matrix_blocks; row++)
+    {
+        for (int col = 0; col < config::matrix_blocks; col++)
+        {
+            if (p.getBlockType(row, col) != 0)
+            {
+                tetrominoSprites.render(config::hold_box_x + col*config::block_size, config::hold_box_y + row*config::block_size,
+                                        &tetrominoSpriteClips[p.piece_type]);
+            }
+        }
+    }
+}
+
 void GameState::drawGhostPiece (Piece p)
 {
     ghostPiece = p;
@@ -304,36 +379,6 @@ void GameState::drawGhostPiece (Piece p)
     }
 
     tetrominoSprites.setAlphaMode(255); // Don't forget to change it back to normal!
-}
-
-void GameState::drawHoldPiece (Piece p)
-{
-    for (int row = 0; row < config::matrix_blocks; row++)
-    {
-        for (int col = 0; col < config::matrix_blocks; col++)
-        {
-            if (p.getBlockType(row, col) != 0)
-            {
-                tetrominoSprites.render(config::hold_box_x + col*config::block_size, config::hold_box_y + row*config::block_size,
-                                        &tetrominoSpriteClips[p.piece_type]);
-            }
-        }
-    }
-}
-
-void GameState::drawNextPiece (Piece p)
-{
-    for (int row = 0; row < config::matrix_blocks; row++)
-    {
-        for (int col = 0; col < config::matrix_blocks; col++)
-        {
-            if (p.getBlockType(row, col) != 0)
-            {
-                tetrominoSprites.render(config::next_box_x + col*config::block_size, config::next_box_y + row*config::block_size,
-                                        &tetrominoSpriteClips[p.piece_type]);
-            }
-        }
-    }
 }
 
 int GameState::getRandom (int lower_limit, int upper_limit)

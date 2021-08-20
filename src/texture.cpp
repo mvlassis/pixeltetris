@@ -7,8 +7,8 @@
 #include "SDL_image.h"
 
 #include "config.hpp"
+#include "renderer.hpp"
 
-extern SDL_Renderer *gRenderer;
 extern TTF_Font *gFont;
 
 /*
@@ -17,8 +17,9 @@ extern TTF_Font *gFont;
  * ====================================
  */
 
-Texture::Texture()
+Texture::Texture(Renderer *renderer)
 {
+    mRenderer = renderer;
     mTexture = nullptr;
     width = 0;
     height = 0;
@@ -51,7 +52,7 @@ void Texture::loadFromImage (std::string path)
     else
     {
         // SDL_SetColorKey(tempSurf, SDL_TRUE, SDL_MapRGB(tempSurf->format, 0xFE, 0xFE, 0xFE)); 
-        mTexture = SDL_CreateTextureFromSurface(gRenderer, tempSurf);
+        mTexture = SDL_CreateTextureFromSurface(mRenderer->mSDLRenderer, tempSurf);
         width = tempSurf->w;
         height = tempSurf->h;
         SDL_FreeSurface(tempSurf);
@@ -70,7 +71,7 @@ void Texture::loadFromText (std::string text, SDL_Color text_color)
     }
     else
     {
-        mTexture = SDL_CreateTextureFromSurface(gRenderer, text_surface);
+        mTexture = SDL_CreateTextureFromSurface(mRenderer->mSDLRenderer, text_surface);
         if (mTexture == nullptr)
         {
             std::cerr << "Could not create texture from rendered text! SDL error: " << SDL_GetError() << '\n';
@@ -93,14 +94,14 @@ void Texture::render (int x, int y, SDL_Rect *clip)
         r.w = clip->w;
         r.h = clip->h;
     }
-    SDL_RenderCopy(gRenderer, mTexture, clip, &r);
+    SDL_RenderCopy(mRenderer->mSDLRenderer, mTexture, clip, &r);
 }
 
 // Renders texture centered at x, y
 void Texture::renderCentered (int x, int y)
 {
     SDL_Rect r = {x-(width/2), y-(height/2), width, height};
-    SDL_RenderCopy(gRenderer, mTexture, nullptr, &r);
+    SDL_RenderCopy(mRenderer->mSDLRenderer, mTexture, nullptr, &r);
 }
 
 void Texture::setAlphaMode (Uint8 alpha)

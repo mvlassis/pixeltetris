@@ -8,16 +8,17 @@
 
 #include "texture.hpp"
 
-extern SDL_Renderer *gRenderer;
-extern TTF_Font *gFont;
-
-
 class Renderer
 {  
 public:
+    void initialize (SDL_Window *window);
+    ~Renderer();
+
     void clearScreen ();
     void renderTexture (Texture *texture, int x, int y);
     void updateScreen ();
+    SDL_Renderer *mSDLRenderer;
+private:
 };
 
 
