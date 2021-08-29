@@ -17,6 +17,15 @@ TTF_Font *gFont = nullptr;
 
 void Renderer::initialize (SDL_Window *window)
 {
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    mFont = TTF_OpenFont("../../assets/FiraSans-Regular.ttf", 28);
+    #else
+    mFont = TTF_OpenFont("../assets/FiraSans-Regular.ttf", 28);
+    #endif
+    if (mFont == nullptr)
+    {
+        std::cerr << "Could not load font! SDL_ttf error: " << TTF_GetError() << '\n';
+    }
     mSDLRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     clearScreen();
 }

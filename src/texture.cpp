@@ -17,6 +17,8 @@ extern TTF_Font *gFont;
  * ====================================
  */
 
+Texture::Texture() {mTexture = nullptr;}
+
 Texture::Texture(Renderer *renderer)
 {
     mRenderer = renderer;
@@ -57,14 +59,13 @@ void Texture::loadFromImage (std::string path)
         height = tempSurf->h;
         SDL_FreeSurface(tempSurf);
     }
-
 }
 
 // Creates texture from string with a certain color
 void Texture::loadFromText (std::string text, SDL_Color text_color)
 {
     free();
-    SDL_Surface *text_surface = TTF_RenderText_Blended_Wrapped(gFont, text.c_str(), text_color, config::logical_window_width);
+    SDL_Surface *text_surface = TTF_RenderText_Blended_Wrapped(mRenderer->mFont, text.c_str(), text_color, config::logical_window_width);
     if (text_surface == nullptr)
     {
         std::cerr << "Could not create surface from text! SDL_ttf error: " << TTF_GetError() << '\n';

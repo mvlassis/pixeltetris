@@ -8,6 +8,8 @@
 
 #include "texture.hpp"
 
+class Texture;
+
 class Renderer
 {  
 public:
@@ -17,9 +19,9 @@ public:
     void clearScreen ();
     void renderTexture (Texture *texture, int x, int y);
     void updateScreen ();
-    SDL_Renderer *mSDLRenderer;
-private:
-};
+    SDL_Renderer *mSDLRenderer = nullptr;
 
+    TTF_Font *mFont;
+};
 
 #endif // RENDERER_HPP

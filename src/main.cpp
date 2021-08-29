@@ -11,6 +11,13 @@ int main(int argc, char **argv)
 #endif
 {
     Game game;
-    game.run();
+    if (game.initialize())
+    {
+        while (!game.isGameExiting())
+        {
+            game.run();
+        }
+        game.exit();
+    }
     return 0;
 }

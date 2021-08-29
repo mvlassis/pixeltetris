@@ -1,11 +1,19 @@
 #include "gamestate.hpp"
 
+#include <iostream> // DEBUG
+
 #include "inputmanager.hpp"
 #include "renderer.hpp"
 #include "texture.hpp"
 #include "utilities.hpp"
 
-GameState::GameState (InputManager *manager, Renderer *renderer) : State (manager, renderer) {}
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
+
+GameState::GameState (InputManager *manager, Renderer *renderer) : State (manager, renderer) { }
 
 void GameState::initialize ()
 {
@@ -22,14 +30,15 @@ void GameState::initialize ()
     nextPiece.c = config::next_box_x;
 
     // Load necessary textures
+    tetrominoSprites = new Texture (mRenderer);
+    playfieldFrame = new Texture (mRenderer);
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    tetrominoSprites.loadFromImage("../../assets/tetrominoSprites.png");
-    playfieldFrame.loadFromImage("../../assets/playfieldFrame.png");
+    tetrominoSprites->loadFromImage("../../assets/tetrominoSprites.png");
+    playfieldFrame->loadFromImage("../../assets/playfieldFrame.png");
     #else
-    tetrominoSprites.loadFromImage("../assets/tetrominoSprites.png");
-    playfieldFrame.loadFromImage("../assets/playfieldFrame.png");
+    tetrominoSprites->loadFromImage("../assets/tetrominoSprites.png");
+    playfieldFrame->loadFromImage("../assets/playfieldFrame.png");
     #endif
-
     // Create the right clips sprites
     for (int i = 0; i < 7; i++)
     {
@@ -50,8 +59,8 @@ void GameState::initialize ()
 void GameState::exit ()
 {
     delete board;
-    tetrominoSprites.free();
-    playfieldFrame.free();
+    tetrominoSprites->free();
+    playfieldFrame->free();
 
     nextStateID = STATE_POP;
 }
@@ -59,17 +68,18 @@ void GameState::exit ()
 void GameState::run ()
 {
     int countdown = 3;
-    Texture countdown_text (mRenderer);
+    Texture *countdown_text = new Texture (mRenderer);
     while (countdown > 0)
     {
         mRenderer->clearScreen();
         draw();
-        countdown_text.loadFromText(std::to_string(countdown), config::default_text_color);
-        mRenderer->renderTexture(&countdown_text, config::logical_window_width/2, config::logical_window_height/2);
+        countdown_text->loadFromText(std::to_string(countdown), config::default_text_color);
+        mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
         mRenderer->updateScreen();
         SDL_Delay(1000);
         countdown--;
     }
+    std::cerr << "Reach here?";
 
     mInputManager->clearEventQueue();
     SDL_Event event;
@@ -106,6 +116,12 @@ void GameState::run ()
             mRenderer->renderTexture(&gameover_text, config::logical_window_width/2, config::logical_window_height/2);
             mRenderer->updateScreen();
     }
+    nextStateID = STATE_EXIT;
+}
+
+void GameState::update ()
+{
+    
 }
 
 void GameState::draw( )
@@ -123,7 +139,7 @@ void GameState::draw( )
  * ====================================
  */
 
-bool GameState::isGameOver()
+bool GameState::isGameOver ()
 {
     return board->isGameOver();
 }
@@ -277,22 +293,22 @@ void GameState::drawBoard ()
     for (int i = 0; i < 2*config::true_playfield_height; i++)
     {
         // Left frame
-        playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + i*config::frame_sprite_size,
+        playfieldFrame->render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + i*config::frame_sprite_size,
             &playfieldFrameClips[0]);
         // Right frame
-        playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width - (config::frame_sprite_size -
+        playfieldFrame->render(config::width_to_playfield + config::block_size * config::playfield_width - (config::frame_sprite_size -
         config::frame_width), config::height_to_playfield + i*config::frame_sprite_size, &playfieldFrameClips[0]);
     }
     // Then the 2 corners
-    playfieldFrame.render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + 
+    playfieldFrame->render(config::width_to_playfield - config::frame_sprite_size, config::height_to_playfield + 
         config::block_size*config::true_playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[2]);
-    playfieldFrame.render(config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield + 
+    playfieldFrame->render(config::width_to_playfield + config::block_size * config::playfield_width, config::height_to_playfield + 
         config::block_size*config::true_playfield_height - (config::frame_sprite_size - config::frame_width), &playfieldFrameClips[3]);
     
     for (int i = 0; i < 2*config::playfield_width; i++)
     {
         // And the bottom frame
-        playfieldFrame.render(config::width_to_playfield + i*config::frame_sprite_size, config::height_to_playfield +
+        playfieldFrame->render(config::width_to_playfield + i*config::frame_sprite_size, config::height_to_playfield +
             config::block_size*config::true_playfield_height, &playfieldFrameClips[1]);
     }
 
@@ -303,7 +319,7 @@ void GameState::drawBoard ()
         {
             if (!board->isBlockFree(row, col))
             {
-                tetrominoSprites.render(config::width_to_playfield + col * config::block_size, config::height_to_playfield +
+                tetrominoSprites->render(config::width_to_playfield + col * config::block_size, config::height_to_playfield +
                 (row-(config::playfield_height-config::true_playfield_height))*config::block_size, &tetrominoSpriteClips[board->getTetromino(row, col)]);
             }
         }
@@ -318,7 +334,7 @@ void GameState::drawCurrentPiece (Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                tetrominoSprites.render(config::width_to_playfield + (col+p.c) * config::block_size, config::height_to_playfield +
+                tetrominoSprites->render(config::width_to_playfield + (col+p.c) * config::block_size, config::height_to_playfield +
                 (row+p.r-(config::playfield_height-config::true_playfield_height)) *config::block_size, &tetrominoSpriteClips[p.piece_type]);
             }
         }
@@ -333,7 +349,7 @@ void GameState::drawNextPiece (Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                tetrominoSprites.render(config::next_box_x + col*config::block_size, config::next_box_y + row*config::block_size,
+                tetrominoSprites->render(config::next_box_x + col*config::block_size, config::next_box_y + row*config::block_size,
                                         &tetrominoSpriteClips[p.piece_type]);
             }
         }
@@ -348,7 +364,7 @@ void GameState::drawHoldPiece (Piece p)
         {
             if (p.getBlockType(row, col) != 0)
             {
-                tetrominoSprites.render(config::hold_box_x + col*config::block_size, config::hold_box_y + row*config::block_size,
+                tetrominoSprites->render(config::hold_box_x + col*config::block_size, config::hold_box_y + row*config::block_size,
                                         &tetrominoSpriteClips[p.piece_type]);
             }
         }
@@ -364,7 +380,7 @@ void GameState::drawGhostPiece (Piece p)
     }
     ghostPiece.r--;
 
-    tetrominoSprites.setAlphaMode(config::transparency_alpha);  // Change transparency to render the ghost piece
+    tetrominoSprites->setAlphaMode(config::transparency_alpha);  // Change transparency to render the ghost piece
 
     for (int row = 0; row < config::matrix_blocks; row++)
     {
@@ -372,13 +388,13 @@ void GameState::drawGhostPiece (Piece p)
         {
             if (ghostPiece.getBlockType(row, col) != 0)
             {
-                tetrominoSprites.render(config::width_to_playfield + (col+ghostPiece.c) * config::block_size, config::height_to_playfield +
+                tetrominoSprites->render(config::width_to_playfield + (col+ghostPiece.c) * config::block_size, config::height_to_playfield +
                 (row+ghostPiece.r-(config::playfield_height-config::true_playfield_height))*config::block_size, &tetrominoSpriteClips[ghostPiece.piece_type]);
             }
         }
     }
 
-    tetrominoSprites.setAlphaMode(255); // Don't forget to change it back to normal!
+    tetrominoSprites->setAlphaMode(255); // Don't forget to change it back to normal!
 }
 
 int GameState::getRandom (int lower_limit, int upper_limit)

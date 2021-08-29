@@ -1,5 +1,5 @@
-#ifndef PIECES_HPP
-#define PIECES_HPP
+#ifndef PIECE_HPP
+#define PIECE_HPP
 
 struct Piece
 {
@@ -18,4 +18,4 @@ public:
 
 
 
-#endif // PIECES_HPP
+#endif // PIECE_HPP

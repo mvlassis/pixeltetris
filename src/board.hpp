@@ -6,7 +6,6 @@
 
 #include <vector>
 
-
 enum BlockStatus : int {block_empty, i_block, o_block, t_block, s_block, z_block, j_block, l_block};
 
 class Board

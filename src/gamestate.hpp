@@ -27,9 +27,9 @@ private:
     bool hold_block_first_time;                         // True if the hold block hasn't been used yet
     bool hold_block_used;                               // True if the hold block has been used, resets after a block is placed
    
-    Texture tetrominoSprites;
+    Texture *tetrominoSprites;
     SDL_Rect tetrominoSpriteClips[7];
-    Texture playfieldFrame;
+    Texture *playfieldFrame;
     SDL_Rect playfieldFrameClips[4];
 
     bool isGameOver ();                                 // True if the game has ended

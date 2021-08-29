@@ -22,6 +22,8 @@ public:
     void popState ();
     void pushState (State *s);
     void changeState (State *s);
+
+    bool isGameExiting();
 private:
     SDL_Window *mWindow;
     Renderer *mRenderer;

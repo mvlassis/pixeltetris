@@ -7,9 +7,12 @@
 
 #include "renderer.hpp"
 
+class Renderer;
+
 class Texture
 {
 public:
+    Texture();
     Texture (Renderer *renderer);
     ~Texture ();
     void free ();
@@ -29,6 +32,5 @@ private:
     int width;
     int height;
 };
-
 
 #endif // TEXTURE_HPP

@@ -31,9 +31,6 @@ bool Game::initialize()
         }
         else
         {
-            mRenderer = new Renderer;
-            mRenderer->initialize(mWindow);
-
             if (IMG_Init(IMG_INIT_PNG) == 0 || IMG_Init(IMG_INIT_JPG) == 0)
             {
                 std::cerr << "Could not initialize SDL_image! SDL_image error: " << IMG_GetError() << '\n';
@@ -44,27 +41,19 @@ bool Game::initialize()
                 std::cerr << "Could not initialize SDL_ttf! SDL_ttf error: " << TTF_GetError() << '\n';
                 success = false;
             }
-
-            #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-            gFont = TTF_OpenFont("../../assets/FiraSans-Regular.ttf", 28);
-            #else
-            mFont = TTF_OpenFont("../assets/FiraSans-Regular.ttf", 28);
-            #endif
-            if (mFont == nullptr)
-            {
-                std::cerr << "Could not load font! SDL_ttf error: " << TTF_GetError() << '\n';
-                success = false;
-            }
         }
     }
-
+    mRenderer = new Renderer;
+    mRenderer->initialize(mWindow);
     // Now load the main menu screen
     // mMainMenuState = new MenuState(new InputManager, new Renderer);
-    pushState(new GameState (new InputManager, new Renderer));
+    pushState(new GameState (new InputManager, mRenderer));
+    mStates.back()->initialize();
+    std::cerr << "Initialization done\n";
     return success;
 }
 
-void Game::exit()
+void Game::exit ()
 {
     for (auto i : mStates)
     {
@@ -124,4 +113,9 @@ void Game::changeState (State *state)
 {
     popState();
     pushState(state);
+}
+
+bool Game::isGameExiting ()
+{
+    return mStates.back()->nextStateID == STATE_EXIT;
 }
