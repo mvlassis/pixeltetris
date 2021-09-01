@@ -12,9 +12,12 @@
 
 class State;
 
+// Utilizes the "Singleton pattern" to ensure there can only be one game
 class Game
 {
 public:
+    static Game* getInstance();
+
     bool initialize ();
     void exit ();
     void run ();
@@ -24,9 +27,12 @@ public:
     void changeState (State *s);
 
     bool isGameExiting();
-private:
-    SDL_Window *mWindow;
+
     Renderer *mRenderer;
+private:
+    static Game *instance;
+    Game();
+    SDL_Window *mWindow;
     InputManager *mManager;
     std::vector<State*> mStates;
 

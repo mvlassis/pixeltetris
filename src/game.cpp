@@ -11,6 +11,15 @@
 #include "menustate.hpp"
 #include "state.hpp"
 
+Game *Game::getInstance()
+{
+    if (instance == nullptr)
+    {
+        instance = new Game;
+    }
+    return instance;
+}
+
 bool Game::initialize()
 {
     bool success = true;
@@ -47,9 +56,8 @@ bool Game::initialize()
     mRenderer->initialize(mWindow);
     // Now load the main menu screen
     // mMainMenuState = new MenuState(new InputManager, new Renderer);
-    pushState(new GameState (new InputManager, mRenderer));
+    pushState(new GameState (new InputManager));
     mStates.back()->initialize();
-    std::cerr << "Initialization done\n";
     return success;
 }
 
@@ -88,7 +96,7 @@ void Game::run ()
                 }
                 case STATE_PLAY:
                 {
-                    pushState(new GameState (new InputManager, new Renderer));
+                    pushState(new GameState (new InputManager));
                     break;
                 }
             }
@@ -116,3 +124,7 @@ bool Game::isGameExiting ()
 {
     return mStates.back()->nextStateID == STATE_EXIT;
 }
+
+Game *Game::instance = 0;
+
+Game::Game () {}

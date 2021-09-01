@@ -13,7 +13,6 @@ class Texture
 {
 public:
     Texture ();
-    Texture (Renderer *renderer);
     ~Texture ();
     void free ();
 
@@ -28,7 +27,6 @@ public:
     
 private:
     SDL_Texture *mTexture;
-    Renderer *mRenderer;
     int width;
     int height;
 };

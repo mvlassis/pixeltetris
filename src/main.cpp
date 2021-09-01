@@ -10,14 +10,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char **argv)
 #endif
 {
-    Game game;
-    if (game.initialize())
+    Game *game = Game::getInstance();
+    if (game->initialize())
     {
-        while (!game.isGameExiting())
+        while (!game->isGameExiting())
         {
-            game.run();
+            game->run();
         }
-        game.exit();
+        game->exit();
     }
     return 0;
 }

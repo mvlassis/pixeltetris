@@ -3,6 +3,7 @@
 #include <iostream> // DEBUG
 
 #include "inputmanager.hpp"
+#include "game.hpp"
 #include "renderer.hpp"
 #include "texture.hpp"
 #include "utilities.hpp"
@@ -13,7 +14,7 @@
  * ====================================
  */
 
-GameState::GameState (InputManager *manager, Renderer *renderer) : State (manager, renderer) { }
+GameState::GameState (InputManager *manager) : State (manager) { }
 
 void GameState::initialize ()
 {
@@ -31,8 +32,8 @@ void GameState::initialize ()
     nextPiece.c = config::next_box_x;
 
     // Load necessary textures
-    tetrominoSprites = new Texture (mRenderer);
-    playfieldFrame = new Texture (mRenderer);
+    tetrominoSprites = new Texture ();
+    playfieldFrame = new Texture ();
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     tetrominoSprites->loadFromImage("../../assets/tetrominoSprites.png");
     playfieldFrame->loadFromImage("../../assets/playfieldFrame.png");
@@ -74,14 +75,14 @@ void GameState::run ()
         case GAME_STARTED:
         {
             int countdown = 3;
-            Texture *countdown_text = new Texture (mRenderer);
+            Texture *countdown_text = new Texture ();
             while (countdown > 0)
             {
-                mRenderer->clearScreen();
+                Game::getInstance()->mRenderer->clearScreen();
                 draw();
                 countdown_text->loadFromText(std::to_string(countdown), config::default_text_color);
-                mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
-                mRenderer->updateScreen();
+                Game::getInstance()->mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
+                Game::getInstance()->mRenderer->updateScreen();
                 SDL_Delay(1000);
                 countdown--;
             }
@@ -110,9 +111,9 @@ void GameState::run ()
                     movePieceDown();
                     time_snap1 = SDL_GetTicks();
                 }
-                mRenderer->clearScreen();
+                Game::getInstance()->mRenderer->clearScreen();
                 draw();
-                mRenderer->updateScreen();
+                Game::getInstance()->mRenderer->updateScreen();
             }
             else
             {
@@ -124,7 +125,7 @@ void GameState::run ()
 
         case GAME_FINISHED:
         {
-            Texture *gameover_text = new Texture (mRenderer);
+            Texture *gameover_text = new Texture ();
             gameover_text->loadFromText("Game Over!", config::default_text_color);
             if (!mInputManager->isGameExiting())
             {
@@ -132,10 +133,10 @@ void GameState::run ()
                 {
                     mInputManager->pollAction(event);
                 }
-                    mRenderer->clearScreen();
+                    Game::getInstance()->mRenderer->clearScreen();
                     draw();
-                    mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
-                    mRenderer->updateScreen();
+                    Game::getInstance()->mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
+                    Game::getInstance()->mRenderer->updateScreen();
             }
             else
             {

@@ -3,10 +3,9 @@
 #include "game.hpp"
 #include "inputmanager.hpp"
 
-State::State (InputManager *manager, Renderer *renderer)
+State::State (InputManager *manager)
 {
     mInputManager = manager;
-    mRenderer = renderer;
 }
 
 void State::popState (Game *game)

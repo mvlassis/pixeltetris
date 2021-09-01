@@ -4,7 +4,7 @@
 #include "renderer.hpp"
 #include "state.hpp"
 
-MenuState::MenuState (InputManager *manager, Renderer *renderer) : State (manager, renderer) {}
+MenuState::MenuState (InputManager *manager) : State (manager) {}
 
 void MenuState::initialize()
 {

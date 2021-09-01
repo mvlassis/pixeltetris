@@ -11,7 +11,7 @@
 class GameState: public State
 {
 public:
-    GameState (InputManager *manager, Renderer *renderer);
+    GameState (InputManager *manager);
     void initialize() override;
     void exit() override;
 

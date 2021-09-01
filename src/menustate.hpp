@@ -8,7 +8,7 @@
 class MenuState: public State
 {
 public:
-    MenuState (InputManager *manager, Renderer *renderer);
+    MenuState (InputManager *manager);
     void initialize () override;
     void exit () override;
     
