@@ -19,13 +19,18 @@ public:
     void update() override;
     void draw() override;
 private:
+    enum GamePhase {GAME_STARTED, GAME_PLAYING, GAME_FINISHED};
+    GamePhase currentPhase;
     Board *board;
     Piece currentPiece {0, 0};
     Piece nextPiece {0, 0};
     Piece holdPiece {0, 0};
     Piece ghostPiece {0, 0};
+
     bool hold_block_first_time;                         // True if the hold block hasn't been used yet
     bool hold_block_used;                               // True if the hold block has been used, resets after a block is placed
+    unsigned long long time_snap1;
+    unsigned long long time_snap2;
    
     Texture *tetrominoSprites;
     SDL_Rect tetrominoSpriteClips[7];

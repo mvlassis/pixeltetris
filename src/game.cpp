@@ -74,29 +74,26 @@ void Game::exit ()
 
 void Game::run ()
 {
-    while (!mStates.empty())
+    if (!mStates.empty())
     {
         mStates.back()->run();
         if (mStates.back()->nextStateID != STATE_NULL)
         {
-            if (mStates.back()->nextStateID == STATE_EXIT)
-            {
-                break;
-            }
-            else switch (mStates.back()->nextStateID)
+            switch (mStates.back()->nextStateID)
             {
                 case STATE_POP:
                 {
                     popState();
+                    break;
                 }
                 case STATE_PLAY:
                 {
                     pushState(new GameState (new InputManager, new Renderer));
+                    break;
                 }
             }
         }
     }
-    exit();
 }
 
 void Game::popState ()

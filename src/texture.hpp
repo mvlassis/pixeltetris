@@ -12,7 +12,7 @@ class Renderer;
 class Texture
 {
 public:
-    Texture();
+    Texture ();
     Texture (Renderer *renderer);
     ~Texture ();
     void free ();

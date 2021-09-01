@@ -12,7 +12,7 @@ class Game;
 class State
 {
 public:
-    State(InputManager *manager, Renderer *renderer);
+    State (InputManager *manager, Renderer *renderer);
     virtual void initialize () = 0;
     virtual void exit () = 0;
 

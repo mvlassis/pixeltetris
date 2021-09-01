@@ -17,6 +17,7 @@ GameState::GameState (InputManager *manager, Renderer *renderer) : State (manage
 
 void GameState::initialize ()
 {
+    currentPhase = GAME_STARTED;
     board = new Board;
     srand(time(0));
     hold_block_first_time = true;
@@ -67,56 +68,83 @@ void GameState::exit ()
 
 void GameState::run ()
 {
-    int countdown = 3;
-    Texture *countdown_text = new Texture (mRenderer);
-    while (countdown > 0)
-    {
-        mRenderer->clearScreen();
-        draw();
-        countdown_text->loadFromText(std::to_string(countdown), config::default_text_color);
-        mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
-        mRenderer->updateScreen();
-        SDL_Delay(1000);
-        countdown--;
-    }
-    std::cerr << "Reach here?";
-
-    mInputManager->clearEventQueue();
     SDL_Event event;
-    unsigned long long time_snap1 = SDL_GetTicks();
-    while (!mInputManager->isGameExiting() && !isGameOver())
+    switch (currentPhase)
     {
-        while (SDL_PollEvent(&event) != 0)
+        case GAME_STARTED:
         {
-            mInputManager->pollAction(event);
-            handleEvent(mInputManager->getAction());
-        }
-        
-        unsigned long long time_snap2 = SDL_GetTicks();
-        if (time_snap2 - time_snap1 >= config::wait_time)
-        {
-            movePieceDown();
+            int countdown = 3;
+            Texture *countdown_text = new Texture (mRenderer);
+            while (countdown > 0)
+            {
+                mRenderer->clearScreen();
+                draw();
+                countdown_text->loadFromText(std::to_string(countdown), config::default_text_color);
+                mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
+                mRenderer->updateScreen();
+                SDL_Delay(1000);
+                countdown--;
+            }
+            currentPhase = GAME_PLAYING;
             time_snap1 = SDL_GetTicks();
+            break;
         }
-        mRenderer->clearScreen();
-        draw();
-        mRenderer->updateScreen();
-    }
 
-    Texture gameover_text (mRenderer);
-    gameover_text.loadFromText("Game Over!", config::default_text_color);
-    while (!mInputManager->isGameExiting())
-    {
-        while (SDL_PollEvent(&event) != 0)
+        case GAME_PLAYING:
         {
-            mInputManager->pollAction(event);
+            if (mInputManager->isGameExiting())
+            {
+                nextStateID = STATE_EXIT;
+            }
+            else if (!isGameOver())
+            {
+                while (SDL_PollEvent(&event) != 0)
+                {
+                    mInputManager->pollAction(event);
+                    handleEvent(mInputManager->getAction());
+                }
+                
+                time_snap2 = SDL_GetTicks();
+                if (time_snap2 - time_snap1 >= config::wait_time)
+                {
+                    movePieceDown();
+                    time_snap1 = SDL_GetTicks();
+                }
+                mRenderer->clearScreen();
+                draw();
+                mRenderer->updateScreen();
+            }
+            else
+            {
+                // Here the game has finished
+                currentPhase = GAME_FINISHED;
+            }
+            break;
         }
-            mRenderer->clearScreen();
-            draw();
-            mRenderer->renderTexture(&gameover_text, config::logical_window_width/2, config::logical_window_height/2);
-            mRenderer->updateScreen();
+
+        case GAME_FINISHED:
+        {
+            Texture *gameover_text = new Texture (mRenderer);
+            gameover_text->loadFromText("Game Over!", config::default_text_color);
+            if (!mInputManager->isGameExiting())
+            {
+                while (SDL_PollEvent(&event) != 0)
+                {
+                    mInputManager->pollAction(event);
+                }
+                    mRenderer->clearScreen();
+                    draw();
+                    mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
+                    mRenderer->updateScreen();
+            }
+            else
+            {
+                // Here the game has exited
+                nextStateID = STATE_EXIT;
+            }
+            break;
+        }
     }
-    nextStateID = STATE_EXIT;
 }
 
 void GameState::update ()
@@ -124,7 +152,7 @@ void GameState::update ()
     
 }
 
-void GameState::draw( )
+void GameState::draw ()
 {
     drawBoard();
     drawCurrentPiece(currentPiece);
