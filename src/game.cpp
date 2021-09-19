@@ -6,6 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "button.hpp"
 #include "config.hpp"
 #include "gamestate.hpp"
 #include "menustate.hpp"
@@ -54,9 +55,16 @@ bool Game::initialize()
     }
     mRenderer = new Renderer;
     mRenderer->initialize(mWindow);
+    mManager = new InputManager;
+
     // Now load the main menu screen
-    // mMainMenuState = new MenuState(new InputManager, new Renderer);
-    pushState(new GameState (new InputManager));
+    mMainMenuState = new MenuState(mManager);
+    mSettingsState = new MenuState(mManager);
+    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 100));
+    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::pushExit, (config::logical_window_width-80)/2, 160));
+    // mMainMenuState->addButton();
+    pushState(mMainMenuState);
+    // pushState(mPlayState);
     mStates.back()->initialize();
     return success;
 }
@@ -85,7 +93,7 @@ void Game::run ()
     if (!mStates.empty())
     {
         mStates.back()->run();
-        if (mStates.back()->nextStateID != STATE_NULL)
+        if (!mStates.empty() && mStates.back()->nextStateID != STATE_NULL)
         {
             switch (mStates.back()->nextStateID)
             {
@@ -120,9 +128,34 @@ void Game::changeState (State *state)
     pushState(state);
 }
 
+void Game::pushNewGame ()
+{
+    delete Game::getInstance()->mPlayState;
+    Game::getInstance()->mPlayState = new GameState(Game::getInstance()->mManager);
+    Game::getInstance()->mPlayState->initialize();
+    Game::getInstance()->pushState(Game::getInstance()->mPlayState);
+}
+
+void Game::pushSettings ()
+{
+    // this
+}
+
+void Game::pushExit ()
+{
+    Game::getInstance()->popState();
+}
+
 bool Game::isGameExiting ()
 {
-    return mStates.back()->nextStateID == STATE_EXIT;
+    if (mStates.empty())
+    {
+        return true;
+    }
+    else
+    {
+        return mStates.back()->nextStateID == STATE_EXIT;
+    }
 }
 
 Game *Game::instance = 0;

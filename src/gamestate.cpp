@@ -16,6 +16,11 @@
 
 GameState::GameState (InputManager *manager) : State (manager) { }
 
+GameState::~GameState ()
+{
+    exit();
+}
+
 void GameState::initialize ()
 {
     currentPhase = GAME_STARTED;
@@ -87,6 +92,7 @@ void GameState::run ()
                 countdown--;
             }
             currentPhase = GAME_PLAYING;
+            mInputManager->clearEventQueue();
             time_snap1 = SDL_GetTicks();
             break;
         }
@@ -216,6 +222,11 @@ void GameState::handleEvent (Action action)
 {
     switch(action)
     {
+        case Action::back:
+        {
+            Game::getInstance()->popState();
+            break;
+        }
         case Action::move_down:
         {
             currentPiece.r++;
@@ -258,6 +269,7 @@ void GameState::handleEvent (Action action)
             break;
         }
 
+        case Action::move_up:
         case Action::rotate:
         {
             currentPiece.rotation = (currentPiece.rotation + 1) % 4;
@@ -303,6 +315,7 @@ void GameState::handleEvent (Action action)
                 }
                 hold_block_used = true;
             }
+            break;
         }
     }
 }

@@ -32,14 +32,16 @@ void InputManager::pollAction(SDL_Event event)
     {
         quit_game = true;
     }
-    else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q)
-    {
-        quit_game = true;
-    }
     else if (event.type == SDL_KEYDOWN)
     {
         switch (event.key.keysym.sym)
         {
+            case SDLK_UP:
+            {
+                action = Action::move_up;
+                break;
+            }
+
             case SDLK_DOWN:
             {
                 action = Action::move_down;
@@ -58,21 +60,33 @@ void InputManager::pollAction(SDL_Event event)
                 break;
             }
 
+            case SDLK_RETURN:
+            {
+                action = Action::select;
+                break;
+            }
+
             case SDLK_SPACE:
             {
                 action = Action::drop;
                 break;
             }
 
-            case SDLK_UP: case SDLK_x:
+            case SDLK_q: case SDLK_ESCAPE:
             {
-                action = Action::rotate;
+                action = Action::back;
                 break;
             }
 
             case SDLK_c: case SDLK_LSHIFT:
             {
                 action = Action::hold;
+                break;
+            }
+
+            case SDLK_x:
+            {
+                action = Action::rotate;
                 break;
             }
         }

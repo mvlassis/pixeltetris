@@ -12,6 +12,7 @@ class GameState: public State
 {
 public:
     GameState (InputManager *manager);
+    ~GameState ();
     void initialize() override;
     void exit() override;
 

@@ -7,8 +7,6 @@
 
 #include "config.hpp"
 
-TTF_Font *gFont = nullptr;
-
 /*
  * ====================================
  * Public methods start here
@@ -18,9 +16,9 @@ TTF_Font *gFont = nullptr;
 void Renderer::initialize (SDL_Window *window)
 {
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    mFont = TTF_OpenFont("../../assets/FiraSans-Regular.ttf", 28);
+    mFont = TTF_OpenFont("../../assets/munro-small.ttf", 30);
     #else
-    mFont = TTF_OpenFont("../assets/FiraSans-Regular.ttf", 28);
+    mFont = TTF_OpenFont("../assets/munro-small.ttf", 30);
     #endif
     if (mFont == nullptr)
     {

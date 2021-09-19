@@ -11,6 +11,8 @@
 #include "state.hpp"
 
 class State;
+class MenuState;
+class GameState;
 
 // Utilizes the "Singleton pattern" to ensure there can only be one game
 class Game
@@ -25,10 +27,14 @@ public:
     void popState ();
     void pushState (State *s);
     void changeState (State *s);
+    static void pushSettings();
+    static void pushNewGame();
+    static void pushExit();
 
     bool isGameExiting();
 
     Renderer *mRenderer;
+    
 private:
     static Game *instance;
     Game();
@@ -36,8 +42,9 @@ private:
     InputManager *mManager;
     std::vector<State*> mStates;
 
-    State *mPlayState;
-    State *mMainMenuState;
+    GameState *mPlayState;
+    MenuState *mMainMenuState;
+    MenuState *mSettingsState;
 
     TTF_Font *mFont;
 };

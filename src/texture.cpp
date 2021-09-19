@@ -10,8 +10,6 @@
 #include "game.hpp"
 #include "renderer.hpp"
 
-extern TTF_Font *gFont;
-
 /*
  * ====================================
  * Public methods start here
@@ -36,13 +34,15 @@ void Texture::free()
     }
 }
 
-void Texture::loadFromImage (std::string path) 
+bool Texture::loadFromImage (std::string path) 
 {
+    bool success = true;
     free();
     SDL_Surface *tempSurf = IMG_Load(path.c_str());
     if (tempSurf == nullptr)
     {
         std::cerr << "Texture: Could not load image from path: " << path << '\n';
+        success = false;
     }
     else
     {
@@ -52,16 +52,19 @@ void Texture::loadFromImage (std::string path)
         height = tempSurf->h;
         SDL_FreeSurface(tempSurf);
     }
+    return success;
 }
 
 // Creates texture from string with a certain color
-void Texture::loadFromText (std::string text, SDL_Color text_color)
+bool Texture::loadFromText (std::string text, SDL_Color text_color)
 {
+    bool success = true;
     free();
     SDL_Surface *text_surface = TTF_RenderText_Blended_Wrapped(Game::getInstance()->mRenderer->mFont, text.c_str(), text_color, config::logical_window_width);
     if (text_surface == nullptr)
     {
         std::cerr << "Could not create surface from text! SDL_ttf error: " << TTF_GetError() << '\n';
+        success = false;
     }
     else
     {
@@ -69,6 +72,7 @@ void Texture::loadFromText (std::string text, SDL_Color text_color)
         if (mTexture == nullptr)
         {
             std::cerr << "Could not create texture from rendered text! SDL error: " << SDL_GetError() << '\n';
+            success = false;
         }
         else
         {
@@ -77,6 +81,7 @@ void Texture::loadFromText (std::string text, SDL_Color text_color)
         }
     }
     SDL_FreeSurface(text_surface);
+    return success;
 }
 
 // Renders texture with top left corner at x, y
