@@ -10,6 +10,7 @@
 #include "config.hpp"
 #include "gamestate.hpp"
 #include "menustate.hpp"
+#include "optionsstate.hpp"
 #include "state.hpp"
 
 Game *Game::getInstance()
@@ -59,12 +60,10 @@ bool Game::initialize()
 
     // Now load the main menu screen
     mMainMenuState = new MenuState(mManager);
-    mSettingsState = new MenuState(mManager);
-    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 100));
-    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::pushExit, (config::logical_window_width-80)/2, 160));
-    // mMainMenuState->addButton();
+    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 120));
+    mMainMenuState->addButton(new Button ("../assets/button-options.png", &Game::pushOptions, (config::logical_window_width-80)/2, 170));
+    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::goBack, (config::logical_window_width-80)/2, 220));
     pushState(mMainMenuState);
-    // pushState(mPlayState);
     mStates.back()->initialize();
     return success;
 }
@@ -136,12 +135,15 @@ void Game::pushNewGame ()
     Game::getInstance()->pushState(Game::getInstance()->mPlayState);
 }
 
-void Game::pushSettings ()
+void Game::pushOptions ()
 {
-    // this
+    delete Game::getInstance()->mOptionsState;
+    Game::getInstance()->mOptionsState = new OptionsState(Game::getInstance()->mManager);
+    Game::getInstance()->mOptionsState->initialize();
+    Game::getInstance()->pushState(Game::getInstance()->mOptionsState);
 }
 
-void Game::pushExit ()
+void Game::goBack ()
 {
     Game::getInstance()->popState();
 }

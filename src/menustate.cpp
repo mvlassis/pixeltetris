@@ -37,10 +37,8 @@ void MenuState::run()
 
 void MenuState::update()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event) != 0)
+    while (mInputManager->pollAction() != 0)
     {
-        mInputManager->pollAction(event);
         if (mInputManager->isGameExiting())
         {
             nextStateID = STATE_EXIT;

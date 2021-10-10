@@ -12,11 +12,11 @@ enum class Action
 class InputManager
 {
 public:
-    void clearEventQueue();
-    Action getAction();
-    bool isGameExiting();
-    void pollAction(SDL_Event event);
-    void setExit();
+    void clearEventQueue ();
+    Action getAction ();
+    bool isGameExiting ();
+    bool pollAction ();
+    void setExit ();
 private:
     bool quit_game = false;
     Action action = Action::stay_idle;

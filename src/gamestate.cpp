@@ -74,7 +74,6 @@ void GameState::exit ()
 
 void GameState::run ()
 {
-    SDL_Event event;
     switch (currentPhase)
     {
         case GAME_STARTED:
@@ -105,9 +104,8 @@ void GameState::run ()
             }
             else if (!isGameOver())
             {
-                while (SDL_PollEvent(&event) != 0)
+                while (mInputManager->pollAction())
                 {
-                    mInputManager->pollAction(event);
                     handleEvent(mInputManager->getAction());
                 }
                 
@@ -135,14 +133,17 @@ void GameState::run ()
             gameover_text->loadFromText("Game Over!", config::default_text_color);
             if (!mInputManager->isGameExiting())
             {
-                while (SDL_PollEvent(&event) != 0)
+                while (mInputManager->pollAction() != 0)
                 {
-                    mInputManager->pollAction(event);
+                    if (mInputManager->getAction() == Action::back)
+                    {
+                        nextStateID = STATE_POP;
+                    }
                 }
-                    Game::getInstance()->mRenderer->clearScreen();
-                    draw();
-                    Game::getInstance()->mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
-                    Game::getInstance()->mRenderer->updateScreen();
+                Game::getInstance()->mRenderer->clearScreen();
+                draw();
+                Game::getInstance()->mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
+                Game::getInstance()->mRenderer->updateScreen();
             }
             else
             {

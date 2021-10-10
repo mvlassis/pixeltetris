@@ -11,8 +11,9 @@
 #include "state.hpp"
 
 class State;
-class MenuState;
 class GameState;
+class MenuState;
+class OptionsState;
 
 // Utilizes the "Singleton pattern" to ensure there can only be one game
 class Game
@@ -27,9 +28,10 @@ public:
     void popState ();
     void pushState (State *s);
     void changeState (State *s);
-    static void pushSettings();
+
+    static void pushOptions();
     static void pushNewGame();
-    static void pushExit();
+    static void goBack();
 
     bool isGameExiting();
 
@@ -44,7 +46,7 @@ private:
 
     GameState *mPlayState;
     MenuState *mMainMenuState;
-    MenuState *mSettingsState;
+    OptionsState *mOptionsState;
 
     TTF_Font *mFont;
 };

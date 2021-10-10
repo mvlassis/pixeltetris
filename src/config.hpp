@@ -35,7 +35,7 @@ namespace config
 
     // Constants relating to Tetris
     const int wait_time = 1000;                                     // Time in milliseconds
-    const bool ghost_piece_enabled = true;                                // Enables or disables the ghost piece to reduce misdrops
+    extern bool ghost_piece_enabled;                                // Enables or disables the ghost piece to reduce misdrops
 
     // Visuals
     const SDL_Color default_text_color = {0x00, 0x00, 0x00, 0xFF};  // Default color for all text
