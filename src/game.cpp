@@ -11,6 +11,7 @@
 #include "gamestate.hpp"
 #include "menustate.hpp"
 #include "optionsstate.hpp"
+#include "pausedstate.hpp"
 #include "state.hpp"
 
 Game *Game::getInstance()
@@ -56,13 +57,18 @@ bool Game::initialize()
     }
     mRenderer = new Renderer;
     mRenderer->initialize(mWindow);
+    // here
+    SDL_RenderSetLogicalSize(mRenderer->mSDLRenderer, config::logical_window_width, config::logical_window_height);
+    SDL_SetWindowSize(mWindow, config::logical_window_width*config::resolution_scaling, config::logical_window_height*config::resolution_scaling);
+    SDL_SetWindowPosition(mWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    
     mManager = new InputManager;
 
     // Now load the main menu screen
     mMainMenuState = new MenuState(mManager);
-    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 120));
-    mMainMenuState->addButton(new Button ("../assets/button-options.png", &Game::pushOptions, (config::logical_window_width-80)/2, 170));
-    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::goBack, (config::logical_window_width-80)/2, 220));
+    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 130));
+    mMainMenuState->addButton(new Button ("../assets/button-options.png", &Game::pushOptions, (config::logical_window_width-80)/2, 180));
+    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::goBack, (config::logical_window_width-80)/2, 230));
     pushState(mMainMenuState);
     mStates.back()->initialize();
     return success;
@@ -143,8 +149,23 @@ void Game::pushOptions ()
     Game::getInstance()->pushState(Game::getInstance()->mOptionsState);
 }
 
+void Game::pushPaused ()
+{
+    delete Game::getInstance()->mPausedState;
+    Game::getInstance()->mPausedState = new PausedState (Game::getInstance()->mManager);
+    Game::getInstance()->mPausedState->initialize();
+    Game::getInstance()->pushState(Game::getInstance()->mPausedState);
+
+}
+
 void Game::goBack ()
 {
+    Game::getInstance()->popState();
+}
+
+void Game::goDoubleBack ()
+{
+    Game::getInstance()->popState();
     Game::getInstance()->popState();
 }
 

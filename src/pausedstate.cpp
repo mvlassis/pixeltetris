@@ -1,43 +1,48 @@
-#include "menustate.hpp"
+#include "pausedstate.hpp"
 
 #include <vector>
 
-#include <SDL2/SDL.h>
-
 #include "config.hpp"
-#include "inputmanager.hpp"
-#include "renderer.hpp"
-#include "state.hpp"
+#include "game.hpp"
 
-MenuState::MenuState (InputManager *manager) : State (manager) {}
+PausedState::PausedState (InputManager *manager) : State (manager) {}
 
-MenuState::~MenuState ()
+PausedState::~PausedState ()
 {
     exit();
 }
 
-void MenuState::initialize()
+void PausedState::initialize ()
 {
-    index = 0;
-    title_text = new Texture();
-    title_text->loadFromText ("Pixeltetris!", Game::getInstance()->mRenderer->bigFont, config::default_text_color);
+    index = 1;
+    paused_frame = new Texture();
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    paused_frame->loadFromImage("../../assets/paused-frame.png")
+    mButtons.push_back(new Button ("../../assets/button-quit.png", &Game::getInstance()->goDoubleBack, 230, 190));
+    mButtons.push_back(new Button ("../../assets/button-resume.png", &Game::getInstance()->goBack, 330, 190));
+    #else
+    paused_frame->loadFromImage("../assets/paused-frame.png");
+    mButtons.push_back(new Button ("../assets/button-quit.png", &Game::getInstance()->goDoubleBack, 230, 190));
+    mButtons.push_back(new Button ("../assets/button-resume.png", &Game::getInstance()->goBack, 330, 190));
+    #endif
 }
 
-void MenuState::exit()
+void PausedState::exit ()
 {
     for (auto i : mButtons)
     {
         delete i;
     }
+    delete paused_frame;
 }
 
-void MenuState::run()
+void PausedState::run ()
 {
     update();
-    draw();          
+    draw();
 }
 
-void MenuState::update()
+void PausedState::update ()
 {
     while (mInputManager->pollAction() != 0)
     {
@@ -54,7 +59,7 @@ void MenuState::update()
                 break;
             }
 
-            case Action::move_up:
+            case Action::move_left:
             {
                 if (index > 0)
                 {
@@ -63,7 +68,7 @@ void MenuState::update()
                 break;
             }
 
-            case Action::move_down:
+            case Action::move_right:
             {
                 if (index < mButtons.size()-1)
                 {
@@ -75,23 +80,17 @@ void MenuState::update()
     }
 }
 
-void MenuState::draw()
+void PausedState::draw ()
 {
-    Game::getInstance()->mRenderer->clearScreen();
+    paused_frame->renderCentered(config::logical_window_width/2, config::logical_window_height/2);
     for (auto i : mButtons)
     {
         i->draw();
     }
-    title_text->renderCentered(config::logical_window_width/2, 50);
     SDL_Rect highlight_box = {mButtons[index]->getX(), mButtons[index]->getY(), mButtons[index]->getWidth(), mButtons[index]->getHeight()};
     SDL_SetRenderDrawBlendMode (Game::getInstance()->mRenderer->mSDLRenderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor (Game::getInstance()->mRenderer->mSDLRenderer, 255, 255, 255, config::transparency_alpha-20);
     SDL_RenderFillRect(Game::getInstance()->mRenderer->mSDLRenderer, &highlight_box);
     SDL_SetRenderDrawBlendMode (Game::getInstance()->mRenderer->mSDLRenderer, SDL_BLENDMODE_NONE);
     Game::getInstance()->mRenderer->updateScreen();
-}
-
-void MenuState::addButton (Button *button)
-{
-    mButtons.push_back(button);
 }

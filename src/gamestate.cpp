@@ -84,7 +84,7 @@ void GameState::run ()
             {
                 Game::getInstance()->mRenderer->clearScreen();
                 draw();
-                countdown_text->loadFromText(std::to_string(countdown), config::default_text_color);
+                countdown_text->loadFromText(std::to_string(countdown), Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
                 Game::getInstance()->mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
                 Game::getInstance()->mRenderer->updateScreen();
                 SDL_Delay(1000);
@@ -130,7 +130,7 @@ void GameState::run ()
         case GAME_FINISHED:
         {
             Texture *gameover_text = new Texture ();
-            gameover_text->loadFromText("Game Over!", config::default_text_color);
+            gameover_text->loadFromText("Game Over!", Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
             if (!mInputManager->isGameExiting())
             {
                 while (mInputManager->pollAction() != 0)
@@ -142,7 +142,7 @@ void GameState::run ()
                 }
                 Game::getInstance()->mRenderer->clearScreen();
                 draw();
-                Game::getInstance()->mRenderer->renderTexture(gameover_text, config::logical_window_width/2, config::logical_window_height/2);
+                Game::getInstance()->mRenderer->renderTexture(gameover_text, 3+config::logical_window_width/2, config::logical_window_height/2);
                 Game::getInstance()->mRenderer->updateScreen();
             }
             else
@@ -317,6 +317,12 @@ void GameState::handleEvent (Action action)
                 hold_block_used = true;
             }
             break;
+        }
+
+        case Action::pause:
+        {
+            currentPhase = GAME_STARTED;
+            Game::getInstance()->pushPaused();
         }
     }
 }

@@ -14,11 +14,13 @@ class State;
 class GameState;
 class MenuState;
 class OptionsState;
+class PausedState;
 
 // Utilizes the "Singleton pattern" to ensure there can only be one game
 class Game
 {
 public:
+    friend class OptionsState;          // Options can change the window size            
     static Game* getInstance();
 
     bool initialize ();
@@ -31,7 +33,9 @@ public:
 
     static void pushOptions();
     static void pushNewGame();
+    static void pushPaused();
     static void goBack();
+    static void goDoubleBack();
 
     bool isGameExiting();
 
@@ -47,6 +51,7 @@ private:
     GameState *mPlayState;
     MenuState *mMainMenuState;
     OptionsState *mOptionsState;
+    PausedState *mPausedState;
 
     TTF_Font *mFont;
 };

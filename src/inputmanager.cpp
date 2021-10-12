@@ -95,6 +95,12 @@ bool InputManager::pollAction ()
                     break;
                 }
 
+                case SDLK_p:
+                {
+                    action = Action::pause;
+                    break;
+                }
+
                 default:
                 {
                     action = Action::stay_idle;

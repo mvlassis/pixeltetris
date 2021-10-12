@@ -21,16 +21,19 @@ public:
     void draw () override;
 
 private:
-    Button *mOKButton;
-    Button *mResolutionOption;
-    Button *mGhostBlockOption;
+    Button *OKButton;
+    Texture *title_text;
     Texture *resolution_setting_text;
+    Texture *resolution_text;
+    Texture *left_arrow;
+    Texture *right_arrow;
     Texture *ghost_block_setting_text;
     Texture *texture_on_on;
     Texture *texture_on_off;
     Texture *texture_off_on;
     Texture *texture_off_off;
     int index;
+    int resolution_scaling_index;                   // Current index of the resolution scaling in the config::available_resolution_scalings array
 
     void changeResolution (SettingChange s);
     void changeGhostBlock (SettingChange s);

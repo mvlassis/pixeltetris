@@ -12,9 +12,13 @@ namespace config
     // so do not change them unless you know what you're doing
     const int logical_window_width = 640;
     const int logical_window_height = 360;
+    extern double resolution_scaling;                               // Default scaling of the logical resolution; 1 means 360p, 2 means 720p etc.
+    extern double available_resolution_scalings[];                  // Resolution scalings available in the options
+    const int starting_resolution_scaling_index = 4;                // The index of the starting resolution scaling in the available_resolution_scalings array
+    const int possible_resolution_scalings = 5;                     // Number of available resolution scalings
 
     // Board class
-    const int width_to_playfield = 245;                             // in pixels
+    const int width_to_playfield = 242;                             // in pixels
     const int height_to_playfield = 34;                             // in pixels
     const int block_size = 16;                                      // in pixels
     const int playfield_width = 10;                                 // in blocks

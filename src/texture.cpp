@@ -56,11 +56,11 @@ bool Texture::loadFromImage (std::string path)
 }
 
 // Creates texture from string with a certain color
-bool Texture::loadFromText (std::string text, SDL_Color text_color)
+bool Texture::loadFromText (std::string text, TTF_Font *font, SDL_Color text_color)
 {
     bool success = true;
     free();
-    SDL_Surface *text_surface = TTF_RenderText_Blended_Wrapped(Game::getInstance()->mRenderer->mFont, text.c_str(), text_color, config::logical_window_width);
+    SDL_Surface *text_surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), text_color, config::logical_window_width);
     if (text_surface == nullptr)
     {
         std::cerr << "Could not create surface from text! SDL_ttf error: " << TTF_GetError() << '\n';

@@ -6,7 +6,7 @@
 // A simple enumeration to hold all possible actions when playing.
 enum class Action
 {
-    stay_idle, back, move_up, move_down, move_left, move_right, select, drop, rotate, hold
+    stay_idle, back, move_up, move_down, move_left, move_right, select, drop, rotate, hold, pause
 };
 
 class InputManager

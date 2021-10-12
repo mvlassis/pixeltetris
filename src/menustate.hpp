@@ -25,6 +25,7 @@ public:
 
 private:
     std::vector<Button*> mButtons;
+    Texture *title_text;
     int index;                          // Shows the current button selected
 };
 

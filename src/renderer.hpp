@@ -21,7 +21,8 @@ public:
     void updateScreen ();
     SDL_Renderer *mSDLRenderer = nullptr;
 
-    TTF_Font *mFont;
+    TTF_Font *mediumFont;
+    TTF_Font *bigFont;
 };
 
 #endif // RENDERER_HPP
