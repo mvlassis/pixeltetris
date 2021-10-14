@@ -31,12 +31,13 @@ void GameState::initialize ()
     
     // Get random first piece
     nextPiece.piece_type = getRandom(0, 6);
-    nextPiece.rotation = 0;                 // Pieces must always start flat according to the offical Tetris guidelines
+    nextPiece.rotation = 0;                     // Pieces must always start flat according to the offical Tetris guidelines
     createNewPiece(); 
     nextPiece.r = config::next_box_y;
     nextPiece.c = config::next_box_x;
 
     // Load necessary textures
+    countdown_texture = new Texture ();
     tetrominoSprites = new Texture ();
     playfieldFrame = new Texture ();
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
@@ -46,6 +47,7 @@ void GameState::initialize ()
     tetrominoSprites->loadFromImage("../assets/tetrominoSprites.png");
     playfieldFrame->loadFromImage("../assets/playfieldFrame.png");
     #endif
+
     // Create the right clips sprites
     for (int i = 0; i < 7; i++)
     {
@@ -61,15 +63,15 @@ void GameState::initialize ()
         playfieldFrameClips[i].w = config::frame_sprite_size;
         playfieldFrameClips[i].h = config::frame_sprite_size;
     }
+    game_just_started = true;
 }
 
 void GameState::exit ()
 {
     delete board;
-    tetrominoSprites->free();
-    playfieldFrame->free();
-
-    nextStateID = STATE_POP;
+    delete countdown_texture;
+    delete tetrominoSprites;
+    delete playfieldFrame;
 }
 
 void GameState::run ()
@@ -78,21 +80,42 @@ void GameState::run ()
     {
         case GAME_STARTED:
         {
-            int countdown = 3;
-            Texture *countdown_text = new Texture ();
-            while (countdown > 0)
+            if (game_just_started)
             {
+                time_snap1 = SDL_GetTicks();
+                game_just_started = false;
+            }
+            unsigned long long ms_passed = SDL_GetTicks() - time_snap1;
+            if (ms_passed < 3000)
+            {
+                while (mInputManager->pollAction())
+                {
+                    if (mInputManager->isGameExiting())
+                    {
+                        nextStateID = STATE_EXIT;
+                        break;
+                    }
+                    if (mInputManager->getAction() == Action::back)
+                    {
+                        Game::getInstance()->popState();
+                        break;                                                  // Pop the state only once even if Action::back is pressed twice
+                    }
+                }
                 Game::getInstance()->mRenderer->clearScreen();
                 draw();
-                countdown_text->loadFromText(std::to_string(countdown), Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
-                Game::getInstance()->mRenderer->renderTexture(countdown_text, config::logical_window_width/2, config::logical_window_height/2);
+                int countdown_time = ceil((3000 - ms_passed)/1000.0);           // The time left on the countdown
+                if (countdown_time >= 0)
+                {
+                    countdown_texture->loadFromText(std::to_string(countdown_time), Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
+                    Game::getInstance()->mRenderer->renderTexture(countdown_texture, config::logical_window_width/2, config::logical_window_height/2);
+                }
                 Game::getInstance()->mRenderer->updateScreen();
-                SDL_Delay(1000);
-                countdown--;
             }
-            currentPhase = GAME_PLAYING;
-            mInputManager->clearEventQueue();
-            time_snap1 = SDL_GetTicks();
+            else
+            {
+                currentPhase = GAME_PLAYING;
+                time_snap1 = SDL_GetTicks();
+            }
             break;
         }
 
@@ -106,7 +129,15 @@ void GameState::run ()
             {
                 while (mInputManager->pollAction())
                 {
-                    handleEvent(mInputManager->getAction());
+                    if (mInputManager->getAction() == Action::back)
+                    {
+                        Game::getInstance()->popState();
+                        break;                                                // Pop the state only once even if Action::back is pressed twice
+                    }
+                    else
+                    {
+                        handleEvent(mInputManager->getAction());
+                    }
                 }
                 
                 time_snap2 = SDL_GetTicks();
@@ -137,7 +168,8 @@ void GameState::run ()
                 {
                     if (mInputManager->getAction() == Action::back)
                     {
-                        nextStateID = STATE_POP;
+                        Game::getInstance()->popState();
+                        break;                                          // Pop the state only once even if Action::back is pressed twice
                     }
                 }
                 Game::getInstance()->mRenderer->clearScreen();
@@ -157,7 +189,7 @@ void GameState::run ()
 
 void GameState::update ()
 {
-    
+    // We don't use this function in this state, the work is done by handleEvent() 
 }
 
 void GameState::draw ()
@@ -216,18 +248,13 @@ void GameState::checkState ()
     {
         createNewPiece();
     }
-    hold_block_used = false;
+    hold_block_used = false;                // We can now use the hold block again
 }
 
 void GameState::handleEvent (Action action)
 {
     switch(action)
     {
-        case Action::back:
-        {
-            Game::getInstance()->popState();
-            break;
-        }
         case Action::move_down:
         {
             currentPiece.r++;
@@ -322,6 +349,7 @@ void GameState::handleEvent (Action action)
         case Action::pause:
         {
             currentPhase = GAME_STARTED;
+            game_just_started = true;
             Game::getInstance()->pushPaused();
         }
     }

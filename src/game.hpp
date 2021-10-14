@@ -39,10 +39,10 @@ public:
 
     bool isGameExiting();
 
-    Renderer *mRenderer;
+    Renderer *mRenderer;                // The renderer used for all things rendering
     
 private:
-    static Game *instance;
+    static Game *mInstance;
     Game();
     SDL_Window *mWindow;
     InputManager *mManager;
@@ -52,8 +52,6 @@ private:
     MenuState *mMainMenuState;
     OptionsState *mOptionsState;
     PausedState *mPausedState;
-
-    TTF_Font *mFont;
 };
 
 #endif // GAME_HPP

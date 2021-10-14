@@ -5,6 +5,8 @@
 
 #include "texture.hpp"
 
+
+// Represents a standard button with a texture and a certain position that can be selected. If selected, the callback function can be called
 class Button
 {
 public:
@@ -12,7 +14,7 @@ public:
     ~Button ();
     bool loadTexture (std::string path);
     void draw ();
-    void (*mCallback) ();
+    void (*callbackFunction) ();
 
     int getX ();
     int getY ();
@@ -20,11 +22,11 @@ public:
     int getHeight ();
 
 private:
-    int mPositionX;
-    int mPositionY;
-    int mWidth;
-    int mHeight;
-    Texture *mTexture;
+    int position_x;
+    int position_y;
+    int width;
+    int height;
+    Texture *texture;
 };
 
 #endif // BUTTON_HPP

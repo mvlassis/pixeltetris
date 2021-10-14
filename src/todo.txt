@@ -1,3 +1,0 @@
-gamestate fix run and update
-remove addButton from Menustate
-add comments to all functions

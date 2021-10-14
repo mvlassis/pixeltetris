@@ -55,7 +55,7 @@ void PausedState::update ()
         {
             case Action::select:
             {
-                mButtons[index]->mCallback();
+                mButtons[index]->callbackFunction();
                 break;
             }
 

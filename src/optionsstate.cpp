@@ -156,7 +156,6 @@ void OptionsState::draw ()
 
     title_text->renderCentered(config::logical_window_width/2, 50);
     resolution_setting_text->render(50, 100);
-    // std::cerr << resolution_setting_text->getHeight(); debug
     ghost_block_setting_text->render(50, 180);
 
     std::string resolution_string = std::to_string(int(config::logical_window_width*config::resolution_scaling)) + " x " +

@@ -1,45 +1,51 @@
 #include "button.hpp"
 
-#include <iostream> // debug
 #include <string>
+
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
 
 Button::Button (std::string path, void (*callback) (), int posX, int posY)
 {
-    mCallback = callback;
-    mPositionX = posX;
-    mPositionY = posY;
-    mTexture = new Texture;
-    mTexture->loadFromImage(path);
-    mWidth = mTexture->getWidth();
-    mHeight = mTexture->getHeight();
+    callbackFunction = callback;
+    position_x = posX;
+    position_y = posY;
+    texture = new Texture;
+    texture->loadFromImage(path);
+    width = texture->getWidth();
+    height = texture->getHeight();
 }
 
 Button::~Button ()
 {
-    mTexture->free();
+    texture->free();
 }
 
+// Draws the button on the screen
 void Button::draw ()
 {
-    mTexture->render(mPositionX, mPositionY);
+    texture->render(position_x, position_y);
 }
 
 int Button::getX ()
 {
-    return mPositionX;
+    return position_x;
 }
 
 int Button::getY ()
 {
-    return mPositionY;
+    return position_y;
 }
 
 int Button::getWidth ()
 {
-    return mWidth;
+    return width;
 }
 
 int Button::getHeight ()
 {
-    return mHeight;
+    return height;
 }

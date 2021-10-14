@@ -16,7 +16,7 @@
 void Renderer::initialize (SDL_Window *window)
 {
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    mFont = TTF_OpenFont("../../assets/munro-small.ttf", 30);
+    mediumFont = TTF_OpenFont("../../assets/munro-small.ttf", 30);
     bigFont = TTF_OpenFont("../../assets/munro.ttf", 50);
     #else
     mediumFont = TTF_OpenFont("../assets/munro-small.ttf", 30);

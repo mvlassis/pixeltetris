@@ -1,5 +1,6 @@
 #include "menustate.hpp"
 
+#include <iostream> //debug
 #include <vector>
 
 #include <SDL2/SDL.h>
@@ -50,7 +51,7 @@ void MenuState::update()
         {
             case Action::select:
             {
-                mButtons[index]->mCallback();
+                mButtons[index]->callbackFunction();
                 break;
             }
 

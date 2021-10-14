@@ -6,7 +6,7 @@
  * ====================================
  */
 
-Board::Board()
+Board::Board ()
 {
     for (int row = 0; row < config::playfield_height; row++)
     {
@@ -17,6 +17,7 @@ Board::Board()
     }
 }
 
+// Get the type of tetromino placed in that block
 int Board::getTetromino (int r, int c)
 {
     return int(board_state[r][c])-1;
@@ -25,7 +26,6 @@ int Board::getTetromino (int r, int c)
 // True if a block is unoccupied
 bool Board::isBlockFree (int r, int c)
 {
-    // X is the column, Y is the row
     return (board_state[r][c] == BlockStatus::block_empty) ? true : false;
 }
 

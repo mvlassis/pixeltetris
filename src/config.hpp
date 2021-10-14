@@ -29,7 +29,6 @@ namespace config
     const int board_height = 2;                                     // distance from botton where the playfield begins; in pixels
     const int matrix_blocks = 5;                                    // matrix that holds tetromino info; in blocks
 
-
     // GameState class
     const int next_box_x = 405;                                     // Horizontal distance from top left corner; in pixels
     const int next_box_y = 10;                                      // Horizontal distance from top left corner; in pixels

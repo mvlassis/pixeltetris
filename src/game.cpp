@@ -14,15 +14,22 @@
 #include "pausedstate.hpp"
 #include "state.hpp"
 
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
+
 Game *Game::getInstance()
 {
-    if (instance == nullptr)
+    if (mInstance == nullptr)
     {
-        instance = new Game;
+        mInstance = new Game;
     }
-    return instance;
+    return mInstance;
 }
 
+// The function called to initialize everything; Pushes the main menu state to the front
 bool Game::initialize()
 {
     bool success = true;
@@ -57,7 +64,8 @@ bool Game::initialize()
     }
     mRenderer = new Renderer;
     mRenderer->initialize(mWindow);
-    // here
+
+    // The logical resolution of the game never changes; We just alter the scaling
     SDL_RenderSetLogicalSize(mRenderer->mSDLRenderer, config::logical_window_width, config::logical_window_height);
     SDL_SetWindowSize(mWindow, config::logical_window_width*config::resolution_scaling, config::logical_window_height*config::resolution_scaling);
     SDL_SetWindowPosition(mWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -69,19 +77,18 @@ bool Game::initialize()
     mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 130));
     mMainMenuState->addButton(new Button ("../assets/button-options.png", &Game::pushOptions, (config::logical_window_width-80)/2, 180));
     mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::goBack, (config::logical_window_width-80)/2, 230));
+    mMainMenuState->initialize();
     pushState(mMainMenuState);
-    mStates.back()->initialize();
     return success;
 }
 
+// Deletes all states loaded, deletes the window and closes all SDL services
 void Game::exit ()
 {
     for (auto i : mStates)
     {
         delete i;
     }
-    TTF_CloseFont(mFont);
-    mFont = nullptr;
 
     delete mRenderer;
 
@@ -93,54 +100,44 @@ void Game::exit ()
     SDL_Quit();
 }
 
+// Main loop of the entire program. Gets the current state and simply runs it
 void Game::run ()
 {
     if (!mStates.empty())
     {
         mStates.back()->run();
-        if (!mStates.empty() && mStates.back()->nextStateID != STATE_NULL)
-        {
-            switch (mStates.back()->nextStateID)
-            {
-                case STATE_POP:
-                {
-                    popState();
-                    break;
-                }
-                case STATE_PLAY:
-                {
-                    pushState(new GameState (new InputManager));
-                    break;
-                }
-            }
-        }
     }
 }
 
+// Deletes the current state
 void Game::popState ()
 {
     mStates.pop_back();
 }
 
+// Pushes a new state to the front
 void Game::pushState (State *state)
 {
     mStates.push_back(state);
 }
 
+// Deletes the current state and replaces it with a different one
 void Game::changeState (State *state)
 {
     popState();
     pushState(state);
 }
 
+// Pushes a new gamestate state to the front
 void Game::pushNewGame ()
 {
     delete Game::getInstance()->mPlayState;
     Game::getInstance()->mPlayState = new GameState(Game::getInstance()->mManager);
     Game::getInstance()->mPlayState->initialize();
-    Game::getInstance()->pushState(Game::getInstance()->mPlayState);
+    Game:getInstance()->pushState(Game::getInstance()->mPlayState);
 }
 
+// Pushes the options to the front
 void Game::pushOptions ()
 {
     delete Game::getInstance()->mOptionsState;
@@ -149,6 +146,7 @@ void Game::pushOptions ()
     Game::getInstance()->pushState(Game::getInstance()->mOptionsState);
 }
 
+// Pushes the pause menu to the front
 void Game::pushPaused ()
 {
     delete Game::getInstance()->mPausedState;
@@ -158,11 +156,13 @@ void Game::pushPaused ()
 
 }
 
+// Goes back one state (by popping the state in the front)
 void Game::goBack ()
 {
     Game::getInstance()->popState();
 }
 
+// Pops the first 2 states
 void Game::goDoubleBack ()
 {
     Game::getInstance()->popState();
@@ -181,6 +181,6 @@ bool Game::isGameExiting ()
     }
 }
 
-Game *Game::instance = 0;
+Game *Game::mInstance = 0;
 
 Game::Game () {}
