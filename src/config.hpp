@@ -6,7 +6,7 @@
 namespace config
 {   
     // Window title
-    const char window_title[] = "PixelTetris!";
+    const char window_title[] = "Pixeltetris";
 
     // Logical resolution of the game. Most constants are in respect to these two values,
     // so do not change them unless you know what you're doing

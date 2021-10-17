@@ -23,7 +23,7 @@ void PausedState::initialize ()
     index = 1;
     paused_frame = new Texture();
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    paused_frame->loadFromImage("../../assets/paused-frame.png")
+    paused_frame->loadFromImage("../../assets/paused-frame.png");
     mButtons.push_back(new Button ("../../assets/button-quit.png", &Game::getInstance()->goDoubleBack, 230, 190));
     mButtons.push_back(new Button ("../../assets/button-resume.png", &Game::getInstance()->goBack, 330, 190));
     #else

@@ -51,6 +51,7 @@ void OptionsState::initialize ()
     texture_on_off->loadFromImage("../../assets/button-on-off.png");
     texture_off_on->loadFromImage("../../assets/button-off-on.png");
     texture_off_off->loadFromImage("../../assets/button-off-off.png");
+    OKButton = new Button("../../assets/button-ok.png", &Game::goBack, (config::logical_window_width - 80) / 2, 280);
     #else
     left_arrow->loadFromImage("../assets/arrow-left.png");
     right_arrow->loadFromImage("../assets/arrow-right.png");
@@ -58,9 +59,8 @@ void OptionsState::initialize ()
     texture_on_off->loadFromImage("../assets/button-on-off.png");
     texture_off_on->loadFromImage("../assets/button-off-on.png");
     texture_off_off->loadFromImage("../assets/button-off-off.png");
-    #endif
-    
-    OKButton = new Button("../assets/button-ok.png", &Game::goBack, (config::logical_window_width-80)/2, 280);
+    OKButton = new Button("../assets/button-ok.png", &Game::goBack, (config::logical_window_width - 80) / 2, 280);
+    #endif 
 }
 
 void OptionsState::exit ()

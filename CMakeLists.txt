@@ -12,11 +12,11 @@ file(GLOB_RECURSE TARGET_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
 
 if (WIN32)
 	string(REPLACE "/include/SDL2" "/include/" SDL2_PARENT_DIR ${SDL2_INCLUDE_DIR})
-	add_executable(PixelTetris WIN32 ${TARGET_SOURCES})
+	add_executable(Pixeltetris WIN32 ${TARGET_SOURCES})
 else()
-	add_executable(PixelTetris ${TARGET_SOURCES})
+	add_executable(Pixeltetris ${TARGET_SOURCES})
 endif()
 
 
-target_include_directories(PixelTetris PRIVATE ${SDL2_PARENT_DIR} ${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
-target_link_libraries(PixelTetris ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+target_include_directories(Pixeltetris PRIVATE ${SDL2_PARENT_DIR} ${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+target_link_libraries(Pixeltetris ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
