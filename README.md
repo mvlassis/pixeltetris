@@ -49,7 +49,6 @@ I do not have a MacOS machine so I cannot test any builds for that OS. However, 
 - Shift/C: Swap with hold block
 - P: Pause the game
 - Q/Esc: Go back
-- That's all!
 
 ## Features to add
 - ~~Create sprites for all objects~~
@@ -59,6 +58,7 @@ I do not have a MacOS machine so I cannot test any builds for that OS. However, 
 - ~~Add an options menu~~
 - ~~Add support for multiple resolutions~~
 - ~~Add a pause menu~~
+- ~~All done!~~
 
 ## Third party tools
 - [SDL2 framework](https://www.libsdl.org/) to handle all the low-level stuff
