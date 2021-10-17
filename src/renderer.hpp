@@ -14,7 +14,7 @@ class Renderer
 {  
 public:
     void initialize (SDL_Window *window);
-    ~Renderer();
+    ~Renderer ();
 
     void clearScreen ();
     void renderTexture (Texture *texture, int x, int y);

@@ -8,7 +8,7 @@
 #include "renderer.hpp"
 #include "state.hpp"
 
-
+// The main menu of the game; It is the state shown when the game starts
 class MenuState: public State
 {
 public:

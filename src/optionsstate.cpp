@@ -1,12 +1,15 @@
 #include "optionsstate.hpp"
 
-#include <algorithm>
-#include <iostream> // debug
-#include <iterator>
 #include <string>
 
 #include "config.hpp"
 #include "game.hpp"
+
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
 
 OptionsState::OptionsState (InputManager *manager) : State (manager) {}
 
@@ -203,6 +206,7 @@ void OptionsState::draw ()
  * ====================================
  */
 
+// Change the resolution by changing the scaling
 void OptionsState::changeResolution (SettingChange s)
 {
     if (s == SettingChange::left && resolution_scaling_index > 0)
@@ -223,6 +227,7 @@ void OptionsState::changeResolution (SettingChange s)
     }
 }
 
+// Turn the ghost block on or off
 void OptionsState::changeGhostBlock (SettingChange s)
 {
     if ( s == SettingChange::left && config::ghost_piece_enabled || s == SettingChange::right && !config::ghost_piece_enabled)

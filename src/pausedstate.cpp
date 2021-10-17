@@ -5,6 +5,12 @@
 #include "config.hpp"
 #include "game.hpp"
 
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
+
 PausedState::PausedState (InputManager *manager) : State (manager) {}
 
 PausedState::~PausedState ()

@@ -10,6 +10,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char **argv)
 #endif
 {
+    // Main loop of the program; Create a single game window, and then run it until we want to exit
     Game *game = Game::getInstance();
     if (game->initialize())
     {

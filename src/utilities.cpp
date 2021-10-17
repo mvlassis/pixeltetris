@@ -2,6 +2,7 @@
 
 #include "piece.hpp"
 
+// Simple function to swap two pieces
 void swap(Piece &a, Piece &b)
 {
     Piece temp = a;

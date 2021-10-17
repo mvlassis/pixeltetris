@@ -1,6 +1,7 @@
 #ifndef PIECE_HPP
 #define PIECE_HPP
 
+// Struct to hold a Tetris piece
 struct Piece
 {
 public:

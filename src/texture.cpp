@@ -34,6 +34,7 @@ void Texture::free()
     }
 }
 
+// Creates texture from an image path
 bool Texture::loadFromImage (std::string path) 
 {
     bool success = true;
@@ -103,6 +104,7 @@ void Texture::renderCentered (int x, int y)
     SDL_RenderCopy(Game::getInstance()->mRenderer->mSDLRenderer, mTexture, nullptr, &r);
 }
 
+// Sets transparency
 void Texture::setAlphaMode (Uint8 alpha)
 {
     SDL_SetTextureAlphaMod (mTexture, alpha);

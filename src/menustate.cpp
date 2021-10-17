@@ -10,6 +10,12 @@
 #include "renderer.hpp"
 #include "state.hpp"
 
+/*
+ * ====================================
+ * Public methods start here
+ * ====================================
+ */
+
 MenuState::MenuState (InputManager *manager) : State (manager) {}
 
 MenuState::~MenuState ()
@@ -17,14 +23,14 @@ MenuState::~MenuState ()
     exit();
 }
 
-void MenuState::initialize()
+void MenuState::initialize ()
 {
     index = 0;
     title_text = new Texture();
     title_text->loadFromText ("Pixeltetris!", Game::getInstance()->mRenderer->bigFont, config::default_text_color);
 }
 
-void MenuState::exit()
+void MenuState::exit ()
 {
     for (auto i : mButtons)
     {
@@ -32,13 +38,13 @@ void MenuState::exit()
     }
 }
 
-void MenuState::run()
+void MenuState::run ()
 {
     update();
     draw();          
 }
 
-void MenuState::update()
+void MenuState::update ()
 {
     while (mInputManager->pollAction() != 0)
     {
@@ -76,7 +82,7 @@ void MenuState::update()
     }
 }
 
-void MenuState::draw()
+void MenuState::draw ()
 {
     Game::getInstance()->mRenderer->clearScreen();
     for (auto i : mButtons)

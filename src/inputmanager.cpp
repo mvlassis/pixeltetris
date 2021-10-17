@@ -8,7 +8,14 @@
  * ====================================
  */
 
-void InputManager::clearEventQueue()
+InputManager::InputManager ()
+{
+    quit_game = false;
+    action = Action::stay_idle;
+}
+
+// Clears all events in the event queue
+void InputManager::clearEventQueue ()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
@@ -17,12 +24,12 @@ void InputManager::clearEventQueue()
     }
 }
 
-Action InputManager::getAction()
+Action InputManager::getAction ()
 {
     return action;
 }
 
-bool InputManager::isGameExiting()
+bool InputManager::isGameExiting ()
 {
     return quit_game;
 }
@@ -121,7 +128,7 @@ bool InputManager::pollAction ()
     return true;
 }
 
-void InputManager::setExit()
+void InputManager::setExit ()
 {
     quit_game = true;
 }
