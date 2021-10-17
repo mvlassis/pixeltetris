@@ -15,7 +15,7 @@ namespace config
     extern double resolution_scaling;                               // Default scaling of the logical resolution; 1 means 360p, 2 means 720p etc.
     extern double available_resolution_scalings[];                  // Resolution scalings available in the options
     const int starting_resolution_scaling_index = 4;                // The index of the starting resolution scaling in the available_resolution_scalings array
-    const int possible_resolution_scalings = 5;                     // Number of available resolution scalings
+    const int possible_resolution_scalings = 6;                     // Number of available resolution scalings
 
     // Board class
     const int width_to_playfield = 242;                             // in pixels

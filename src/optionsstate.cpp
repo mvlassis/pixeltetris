@@ -217,7 +217,7 @@ void OptionsState::changeResolution (SettingChange s)
             config::logical_window_height*config::available_resolution_scalings[resolution_scaling_index]);
         SDL_SetWindowPosition(Game::getInstance()->mWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
-    else if (s == SettingChange::right && resolution_scaling_index < config::possible_resolution_scalings)
+    else if (s == SettingChange::right && resolution_scaling_index < config::possible_resolution_scalings-1)
     {
         ++resolution_scaling_index;
         config::resolution_scaling = config::available_resolution_scalings[resolution_scaling_index];

@@ -74,9 +74,6 @@ bool Game::initialize()
 
     // Now load the main menu screen
     mMainMenuState = new MenuState(mManager);
-    mMainMenuState->addButton(new Button ("../assets/button-play.png", &Game::pushNewGame, (config::logical_window_width-80)/2, 130));
-    mMainMenuState->addButton(new Button ("../assets/button-options.png", &Game::pushOptions, (config::logical_window_width-80)/2, 180));
-    mMainMenuState->addButton(new Button ("../assets/button-exit.png", &Game::goBack, (config::logical_window_width-80)/2, 230));
     mMainMenuState->initialize();
     pushState(mMainMenuState);
     return success;
