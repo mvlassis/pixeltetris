@@ -1,6 +1,11 @@
 # Pixeltetris
 A Tetris game written from scratch in C++ using the SDL2 development library. Apart from the core gameplay, the project also includes some extra features like a ghost block to reduce misdrops, a simple main menu, and support for multiple resolutions. All assets used were created by me.
 
+![](gallery/gameplay.gif)
+
+## Gallery
+<img src="gallery/mainmenu.png" width = "310"> <img src="gallery/options.png" width = "310"> <img src="gallery/pausemenu.png" width = "310">
+
 ## Installation
 If you just want to play the game on your Windows machine, go the the releases page and get the latest executable. Note that you may need the [Microsoft Visual C++ Redistributables](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) if you don't have them already installed.
 
