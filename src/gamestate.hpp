@@ -38,6 +38,7 @@ private:
     unsigned long long time_snap2;
    
     Texture *countdown_texture;
+    Texture *gameover_text;
     Texture *tetrominoSprites;
     SDL_Rect tetrominoSpriteClips[7];
     Texture *playfieldFrame;

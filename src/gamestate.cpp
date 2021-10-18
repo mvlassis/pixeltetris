@@ -38,6 +38,8 @@ void GameState::initialize ()
 
     // Load necessary textures
     countdown_texture = new Texture ();
+    gameover_text = new Texture ();
+    gameover_text->loadFromText("Game Over!", Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
     tetrominoSprites = new Texture ();
     playfieldFrame = new Texture ();
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
@@ -70,6 +72,7 @@ void GameState::exit ()
 {
     delete board;
     delete countdown_texture;
+    delete gameover_text;
     delete tetrominoSprites;
     delete playfieldFrame;
 }
@@ -160,8 +163,6 @@ void GameState::run ()
 
         case GAME_FINISHED:
         {
-            Texture *gameover_text = new Texture ();
-            gameover_text->loadFromText("Game Over!", Game::getInstance()->mRenderer->mediumFont, config::default_text_color);
             if (!mInputManager->isGameExiting())
             {
                 while (mInputManager->pollAction() != 0)
