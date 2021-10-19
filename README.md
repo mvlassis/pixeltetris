@@ -7,8 +7,15 @@ A Tetris game written from scratch in C++ using the SDL2 development library. Ap
 <img src="gallery/mainmenu.png" width = "310"> <img src="gallery/options.png" width = "310"> <img src="gallery/pausemenu.png" width = "310">
 
 ## Installation
-If you just want to play the game on your Windows machine, go the the releases page and get the latest executable. Note that you may need the [Microsoft Visual C++ Redistributables](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) if you don't have them already installed.
-
+If you just want to try the game on your Windows or Linux machine, go the the [Releases](https://github.com/jumpmanmv/pixeltetris/releases) page and get the latest executable.
+- For Windows you may need the [Microsoft Visual C++ Redistributables](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) if you don't have them already installed.
+- For Linux you need to install g++, and the SDL2, SDL2_image and SDL2_ttf runtime libraries, which should be easily found in your distribution's repository. For Debian-based systems, use:
+```
+sudo apt install g++
+sudo apt install libsdl2-2.0-0
+sudo apt install libsdl2-ttf-2.0-0
+sudo apt install libsdl2-image-2.0-0
+```
 ## Build Instructions
 This is the first project where I use CMake to support multiple OSes and compilers, so to compile the game yourself you will need [CMake](https://cmake.org/overview/).
 
@@ -22,7 +29,7 @@ This is the first project where I use CMake to support multiple OSes and compile
 
 ### Linux
 - Firstly, install the g++ compiler using a command like *sudo apt install g++* or *sudo dnf install gcc-g++*. Then, install CMake using a command like *sudo apt install cmake* or *sudo dnf install cmake*.
-- You will also need the SDL2, SDL_ttf and SDL_image libaries. Install them on Ubuntu-based systems by running:
+- You will also need the SDL2, SDL_ttf and SDL_image libaries. Install them on Debian-based systems by running:
 ```
 sudo apt install libsdl2-dev
 sudo apt install libsdl2-ttf-dev
