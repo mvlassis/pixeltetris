@@ -7,7 +7,7 @@ A Tetris game written from scratch in C++ using the SDL2 development library. Ap
 <img src="gallery/mainmenu.png" width = "310"> <img src="gallery/options.png" width = "310"> <img src="gallery/pausemenu.png" width = "310">
 
 ## Installation
-If you just want to try the game on your Windows or Linux machine, go the the [Releases](https://github.com/jumpmanmv/pixeltetris/releases) page and get the latest executable.
+If you just want to try the game on your Windows or Linux machine, go the [Releases](https://github.com/jumpmanmv/pixeltetris/releases) page and get the latest executable.
 - For Windows you may need the [Microsoft Visual C++ Redistributables](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) if you don't have them already installed.
 - For Linux you need to install g++, and the SDL2, SDL2_ttf, and SDL2_image runtime libraries, which should be easily found in your distribution's repository. For Debian-based systems, use:
 ```
