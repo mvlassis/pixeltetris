@@ -38,8 +38,8 @@ sudo apt install libsdl2-image-dev
 or on Fedora-based systems by running:
 ```
 sudo dnf install SDL2-devel
-sudo dnf install SDL_ttf-devel
-sudo dnf install SDL_image-devel
+sudo dnf install SDL2_ttf-devel
+sudo dnf install SDL2_image-devel
 ```
 - Clone the repository to your PC.
 - Open a terminal window in the root directory of the cloned repository and run these commands one by one:
