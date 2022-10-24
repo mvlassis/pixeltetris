@@ -45,8 +45,8 @@ sudo dnf install SDL2_image-devel
 - Open a terminal window in the root directory of the cloned repository and run these commands one by one:
 ```
 mkdir build
+cmake -B build
 cd build
-cmake .
 make
 ```
 You will then find the Pixeltetris executable in build.
